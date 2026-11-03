@@ -671,3 +671,146 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
         width: 100%;
     }
 }
+
+
+
+/* =========================================
+   Grupo JM — DETALLES DE LUJO
+   (divisor con rombo, tarjetas con esquinas cortadas, ventana de detalle)
+========================================= */
+
+/* Divisor con rombo debajo de los títulos */
+.seccion > .contenedor > h2::after,
+.cabecera-pagina h1::after,
+.detalle-nombre::after {
+    content: "";
+    display: block;
+    width: min(100%, 280px);
+    height: 10px;
+    margin-top: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 10'%3E%3Cpath d='M0 5H126M154 5H280' stroke='%238C6425'/%3E%3Cpath d='M140 0 148 5 140 10 132 5Z' fill='%23D4AF37'/%3E%3C/svg%3E") no-repeat left center / 100% 100%;
+}
+
+/* Tarjetas de relojes con dos esquinas cortadas */
+.reloj {
+    position: relative;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+    transition: transform 0.25s;
+}
+
+.reloj::before,
+.reloj::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+}
+
+.reloj::before { inset: 0; background: var(--dorado-oscuro); transition: background 0.25s; }
+
+.reloj::after {
+    inset: 1px;
+    background: linear-gradient(160deg, var(--negro-suave), var(--tarjeta));
+    clip-path: polygon(0 0, calc(100% - 21px) 0, 100% 21px, 100% 100%, 21px 100%, 0 calc(100% - 21px));
+}
+
+.reloj > * { position: relative; z-index: 1; }
+.reloj:hover { transform: translateY(-4px); }
+.reloj:hover::before,
+.reloj:focus-visible::before { background: var(--dorado); }
+.reloj:focus-visible { outline: none; }
+
+.reloj-foto::after {
+    content: "Ver detalles";
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    color: var(--dorado);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 999px;
+}
+
+.reloj-info p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Ventana con el detalle del reloj */
+body:has(dialog[open]) { overflow: hidden; }
+
+.detalle {
+    width: 100%;
+    max-width: min(92vw, 820px);
+    padding: 0;
+    color: var(--texto);
+    background: transparent;
+    border: 0;
+}
+
+.detalle::backdrop { background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(5px); }
+
+.detalle-caja {
+    position: relative;
+    display: grid;
+    gap: 22px;
+    max-height: 88vh;
+    padding: 34px 30px 30px;
+    overflow-y: auto;
+    background: linear-gradient(160deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+}
+
+.esquina { position: absolute; width: 22px; height: 22px; border: 0 solid var(--dorado); pointer-events: none; }
+.e1 { top: 7px; left: 7px; border-width: 2px 0 0 2px; }
+.e2 { top: 7px; right: 7px; border-width: 2px 2px 0 0; }
+.e3 { bottom: 7px; left: 7px; border-width: 0 0 2px 2px; }
+.e4 { bottom: 7px; right: 7px; border-width: 0 2px 2px 0; }
+
+.detalle-cerrar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    color: var(--dorado);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s;
+}
+
+.detalle-cerrar:hover { color: var(--negro); background: var(--dorado); }
+
+.detalle-foto {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: radial-gradient(circle at 50% 50%, rgba(110, 31, 42, 0.55), transparent 70%);
+}
+
+.detalle-nombre { font-size: clamp(1.7rem, 4vw, 2.4rem); text-align: left; }
+.detalle-descripcion { margin: 16px 0; line-height: 1.7; white-space: pre-line; }
+.detalle-precio { display: block; margin-bottom: 20px; font: 600 1.8rem var(--sans); color: var(--dorado-vivo); }
+
+@media (min-width: 700px) {
+    .detalle-caja { grid-template-columns: 1fr 1fr; align-items: center; padding: 40px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .detalle[open] { animation: aparecer 0.35s ease both; }
+}

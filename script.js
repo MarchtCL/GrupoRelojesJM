@@ -5,8 +5,20 @@
 
 const WHATSAPP = "573118261427";
 
-// Conexión con Supabase
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Conexión segura con Supabase
+let db = null;
+
+if (
+    typeof supabase !== "undefined" &&
+    typeof SUPABASE_URL !== "undefined" &&
+    typeof SUPABASE_KEY !== "undefined"
+) {
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+// ======================================
+// COLECCIONES
+// ======================================
 
 const colecciones = {
     rolex: {
@@ -65,36 +77,49 @@ const colecciones = {
         nombre: "AP",
         productos: []
     },
+
     Cartier: {
         nombre: "Cartier",
         productos: []
     },
+
     Invicta: {
         nombre: "Invicta",
         productos: []
     },
+
     QYQ: {
         nombre: "Q&Q",
         productos: []
     },
+
     RichardMille: {
         nombre: "Richard Mille",
         productos: []
     },
+
     Tissot: {
         nombre: "Tissot",
         productos: []
     },
+
     TechnoMarine: {
         nombre: "TechnoMarine",
         productos: []
     }
 };
 
+// ======================================
+// ELEMENTOS DEL CATÁLOGO
+// ======================================
+
 const catalogo = document.getElementById("catalogo");
 const filtros = document.getElementById("filtros");
 
-// Evita que los nombres o descripciones rompan el HTML
+// ======================================
+// FUNCIONES AUXILIARES
+// ======================================
+
 function escaparHTML(texto) {
     return String(texto ?? "").replace(/[&<>"']/g, caracter => ({
         "&": "&amp;",
@@ -105,18 +130,22 @@ function escaparHTML(texto) {
     })[caracter]);
 }
 
-// Enlace de WhatsApp
 function enlaceWhatsApp(reloj) {
     const mensaje = `Hola, me interesa el ${reloj.nombre}. ${reloj.descripcion}. ¿Me pueden dar más información?`;
+
     return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
 }
 
-// Crear tarjeta
+// ======================================
+// CREAR TARJETAS
+// ======================================
+
 function tarjeta(reloj, clave) {
     return `
-        <article class="reloj">
+        <article class="reloj" tabindex="0">
             <div class="reloj-foto">
                 ${clave === "ofertas" ? '<span class="etiqueta">Oferta</span>' : ""}
+
                 <img
                     src="${escaparHTML(reloj.imagen)}"
                     alt="${escaparHTML(reloj.nombre)}"
@@ -126,7 +155,12 @@ function tarjeta(reloj, clave) {
 
             <div class="reloj-info">
                 <h3>${escaparHTML(reloj.nombre)}</h3>
+
                 <p>${escaparHTML(reloj.descripcion)}</p>
+
+                ${reloj.precio !== undefined && reloj.precio !== null && reloj.precio !== ""
+                    ? `<span class="precio">${escaparHTML(reloj.precio)}</span>`
+                    : ""}
 
                 <a class="boton"
                    href="${enlaceWhatsApp(reloj)}"
@@ -139,7 +173,10 @@ function tarjeta(reloj, clave) {
     `;
 }
 
-// Crear filtros
+// ======================================
+// CREAR FILTROS
+// ======================================
+
 function crearFiltros() {
     const opciones = [
         ["todos", "Todos"],
@@ -150,15 +187,20 @@ function crearFiltros() {
     ];
 
     filtros.innerHTML = opciones.map(([clave, nombre]) => `
-        <button type="button"
-                data-clave="${clave}"
-                aria-pressed="false">
-            ${nombre}
+        <button
+            type="button"
+            data-clave="${escaparHTML(clave)}"
+            aria-pressed="false"
+        >
+            ${escaparHTML(nombre)}
         </button>
     `).join("");
 }
 
-// Mostrar colección
+// ======================================
+// MOSTRAR COLECCIÓN
+// ======================================
+
 function mostrar(clave) {
     const claves = clave === "todos"
         ? Object.keys(colecciones)
@@ -179,12 +221,26 @@ function mostrar(clave) {
     });
 }
 
-// Cargar relojes desde Supabase
+// ======================================
+// CARGAR RELOJES DESDE SUPABASE
+// ======================================
+
 async function cargarRelojesSupabase() {
+    if (!db) {
+        console.error("Supabase no está conectado.");
+        catalogo.innerHTML = `
+            <p class="mensaje">
+                No se pudo conectar con el catálogo.
+                Comprueba la configuración de Supabase.
+            </p>
+        `;
+        return false;
+    }
+
     try {
         const { data, error } = await db
             .from("relojes")
-            .select("marca, nombre, descripcion, imagen_url, created_at")
+            .select("marca, nombre, descripcion, precio, imagen_url, created_at")
             .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -194,29 +250,34 @@ async function cargarRelojesSupabase() {
 
             if (!colecciones[clave] || !reloj.imagen_url) return;
 
-            // Agregar el reloj nuevo al comienzo de su categoría
             colecciones[clave].productos.unshift({
                 imagen: reloj.imagen_url,
                 nombre: reloj.nombre,
-                descripcion: reloj.descripcion || "Consulta más información por WhatsApp."
+                descripcion: reloj.descripcion || "Consulta más información por WhatsApp.",
+                precio: reloj.precio
             });
         });
 
+        return true;
+
     } catch (error) {
         console.error("No se pudieron cargar los relojes:", error);
+
         catalogo.innerHTML = `
             <p class="mensaje">
                 No se pudieron cargar los relojes nuevos.
-                Intenta recargar la página.
+                ${escaparHTML(error.message)}
             </p>
         `;
+
         return false;
     }
-
-    return true;
 }
 
-// Inicializar catálogo
+// ======================================
+// INICIAR CATÁLOGO
+// ======================================
+
 async function iniciarCatalogo() {
     if (!catalogo || !filtros) return;
 
@@ -250,7 +311,10 @@ async function iniciarCatalogo() {
 
 iniciarCatalogo();
 
+// ======================================
 // MENÚ HAMBURGUESA
+// ======================================
+
 const botonMenu = document.getElementById("botonMenu");
 const panelMenu = document.getElementById("panelMenu");
 
@@ -263,12 +327,20 @@ if (botonMenu && panelMenu) {
 
     botonMenu.addEventListener("click", () => {
         const seAbre = panelMenu.hidden;
+
         panelMenu.hidden = !seAbre;
-        botonMenu.setAttribute("aria-expanded", String(seAbre));
+
+        botonMenu.setAttribute(
+            "aria-expanded",
+            String(seAbre)
+        );
     });
 }
 
+// ======================================
 // ENLACES DE WHATSAPP
+// ======================================
+
 document.querySelectorAll("[data-whatsapp]").forEach(enlace => {
     enlace.href = `https://wa.me/${WHATSAPP}`;
 });
