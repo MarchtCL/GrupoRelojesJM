@@ -1,6 +1,6 @@
 
 /* =====================================
-   SHUDOROKY — CONFIGURACIÓN SUPABASE
+   Grupo JM — CONFIGURACIÓN SUPABASE
 ===================================== */
 
 // URL de tu proyecto Supabase

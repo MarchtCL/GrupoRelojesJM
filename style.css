@@ -1,4 +1,4 @@
-/* SHUDOROKY — identidad visual: negro, vino y dorado */
+/* Grupo JM — identidad visual: negro, vino y dorado */
 :root {
     --negro: #0E0A0A;
     --negro-suave: #171010;
@@ -266,7 +266,7 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
 
 
 /* =========================================
-   SHUDOROKY — PANEL DE ADMINISTRACIÓN
+   Grupo JM — PANEL DE ADMINISTRACIÓN
 ========================================= */
 
 .admin {
@@ -485,7 +485,7 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
 
 
 /* =========================================
-   SHUDOROKY — LISTA REAL DE RELOJES ADMIN
+   Grupo JM — LISTA REAL DE RELOJES ADMIN
 ========================================= */
 
 .admin .lista-admin {

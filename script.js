@@ -1,6 +1,6 @@
 
 // ======================================
-// SHUDOROKY — CATÁLOGO DE RELOJES
+// Grupo JM — CATÁLOGO DE RELOJES
 // ======================================
 
 const WHATSAPP = "573118261427";
