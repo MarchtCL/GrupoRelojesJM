@@ -51,7 +51,17 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
     padding: 8px clamp(16px, 3vw, 48px);
 }
 
-.logo { height: 54px; width: auto; mix-blend-mode: screen; }
+.marca {
+    font: 600 1.45rem var(--serif);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--dorado-vivo), var(--dorado) 50%, var(--dorado-oscuro));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
 .divisor { width: 1px; height: 38px; background: var(--dorado-oscuro); }
 
 .menu { flex: 1; display: flex; justify-content: center; gap: clamp(18px, 4.2vw, 64px); }
@@ -89,41 +99,98 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
 .panel-menu a { padding: 14px clamp(16px, 3vw, 48px); border-bottom: 1px solid rgba(140, 100, 37, 0.35); }
 .panel-menu a:hover { color: var(--dorado-vivo); }
 
-/* PORTADA */
-.solo-lectores {
-    position: absolute;
-    width: 1px;
-    height: 1px;
+/* PORTADA: eclipse dorado hecho solo con CSS */
+.hero {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    padding: clamp(44px, 8vw, 90px) 20px clamp(64px, 9vw, 110px);
+    text-align: center;
     overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    background: radial-gradient(ellipse at 50% 28%, rgba(110, 31, 42, 0.4), transparent 62%);
 }
 
-.hero { text-align: center; padding-bottom: 70px; }
-
-.hero-img {
-    width: 100%;
-    height: clamp(250px, 54vw, 640px);
-    object-fit: cover;
-    object-position: 50% 50%;
+.eclipse {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(72vw, 380px, 46svh);
+    aspect-ratio: 1;
 }
 
-.hero-boton {
-    display: inline-block;
-    margin-top: -6px;
-    padding: 14px 40px;
-    font: 600 0.95rem var(--serif);
-    letter-spacing: 0.25em;
+.eclipse::before {
+    content: "";
+    position: absolute;
+    inset: 7%;
+    z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #221715, #050303 70%);
+    box-shadow: inset 0 0 40px #000, 0 0 0 1px var(--dorado-oscuro);
+}
+
+.corona {
+    position: absolute;
+    inset: -12%;
+    z-index: 0;
+    border-radius: 50%;
+    background: conic-gradient(transparent, var(--dorado-vivo), transparent 30%, var(--vino-vivo), transparent 62%, var(--dorado), transparent);
+    filter: blur(22px);
+    opacity: 0.8;
+}
+
+.anillo {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from -0.4deg, var(--dorado) 0 0.8deg, transparent 0.8deg 6deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+    opacity: 0.7;
+}
+
+.monograma {
+    position: relative;
+    z-index: 2;
+    font: 600 clamp(4.5rem, 20vw, 8.5rem) / 1 var(--serif);
+    background: linear-gradient(160deg, #FFF1B8, var(--dorado) 45%, var(--dorado-oscuro));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 4px 18px rgba(212, 175, 55, 0.35));
+}
+
+.hero h1 {
+    margin-top: clamp(30px, 5vw, 50px);
+    padding-left: 0.38em;
+    font: 600 clamp(1.6rem, 6vw, 2.6rem) / 1.1 var(--serif);
+    letter-spacing: 0.38em;
     text-transform: uppercase;
-    color: var(--dorado-vivo);
-    background: #000;
+}
+
+.lema {
+    margin: 14px 0 30px;
+    font-size: clamp(0.62rem, 2.6vw, 0.8rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.rutas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+.rutas a, .rutas .pronto {
+    padding: 13px 30px;
+    font: 600 0.9rem var(--serif);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     border: 1px solid var(--dorado);
     border-radius: 999px;
-    box-shadow: 0 0 18px rgba(212, 175, 55, 0.2);
-    transition: background 0.25s, color 0.25s;
 }
 
-.hero-boton:hover { background: var(--dorado); color: var(--negro); }
+.rutas a { color: var(--dorado-vivo); background: rgba(0, 0, 0, 0.4); transition: background 0.25s, color 0.25s; }
+.rutas a:hover { color: var(--negro); background: var(--dorado); }
+.rutas .pronto { color: var(--dorado-oscuro); border: 1px dashed var(--dorado-oscuro); }
+.rutas .pronto small { margin-left: 6px; font: 500 0.7rem var(--sans); letter-spacing: 0.1em; }
 
 .boton {
     display: inline-block;
@@ -137,11 +204,15 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
 
 .boton:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(212, 175, 55, 0.3); }
 
-/* Una sola animación de entrada: la portada */
+/* Movimiento suave: la corona gira despacio y el texto aparece */
 @media (prefers-reduced-motion: no-preference) {
+    @keyframes girar { to { transform: rotate(1turn); } }
     @keyframes aparecer { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-    .hero-img { animation: aparecer 1s ease both; }
-    .hero-boton { animation: aparecer 1s ease 0.3s both; }
+    .corona { animation: girar 16s linear infinite; }
+    .anillo { animation: girar 90s linear infinite reverse; }
+    .eclipse { animation: aparecer 1s ease both; }
+    .hero h1 { animation: aparecer 1s ease 0.25s both; }
+    .lema, .rutas { animation: aparecer 1s ease 0.45s both; }
 }
 
 /* SECCIONES */
@@ -254,7 +325,7 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
 /* TABLET Y CELULAR: el menú se guarda en la hamburguesa */
 @media (max-width: 860px) {
     .menu, .barra > .divisor { display: none; }
-    .logo { height: 46px; }
+    .marca { font-size: 1.2rem; letter-spacing: 0.25em; }
 }
 
 /* CELULARES */
