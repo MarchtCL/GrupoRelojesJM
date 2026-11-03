@@ -1,0 +1,602 @@
+/* SHUDOROKY — identidad visual: negro, vino y dorado */
+:root {
+    --negro: #0E0A0A;
+    --negro-suave: #171010;
+    --tarjeta: #1E1514;
+    --vino: #6E1F2A;
+    --vino-vivo: #A32F3F;
+    --dorado: #D4AF37;
+    --dorado-vivo: #F0C44D;
+    --dorado-oscuro: #8C6425;
+    --texto: #C2A878;
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans: "Jost", "Segoe UI", Arial, sans-serif;
+    --ancho: 1180px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+    margin: 0;
+    background: var(--negro);
+    color: var(--texto);
+    font-family: var(--sans);
+    line-height: 1.65;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; line-height: 1.1; margin: 0; }
+
+:focus-visible { outline: 2px solid var(--dorado-vivo); outline-offset: 3px; }
+
+.contenedor { width: min(100% - 40px, var(--ancho)); margin-inline: auto; }
+
+/* ENCABEZADO (igual al de la imagen de Grupo JM) */
+.encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 7, 7, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--dorado);
+    box-shadow: 0 1px 18px rgba(212, 175, 55, 0.25);
+}
+
+.barra {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2.4vw, 34px);
+    padding: 8px clamp(16px, 3vw, 48px);
+}
+
+.logo { height: 54px; width: auto; mix-blend-mode: screen; }
+.divisor { width: 1px; height: 38px; background: var(--dorado-oscuro); }
+
+.menu { flex: 1; display: flex; justify-content: center; gap: clamp(18px, 4.2vw, 64px); }
+
+.menu a, .panel-menu a {
+    padding: 8px 4px;
+    font: 500 1.15rem var(--serif);
+    color: #E9D8AC;
+    border-bottom: 2px solid transparent;
+    transition: color 0.25s, border-color 0.25s;
+}
+
+.menu a:hover { color: var(--dorado-vivo); }
+.menu a[aria-current="page"] { color: var(--dorado-vivo); font-weight: 700; border-color: var(--dorado); }
+
+.acciones { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+
+.icono {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: var(--dorado);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color 0.25s;
+}
+
+.icono:hover { color: var(--dorado-vivo); }
+
+.panel-menu { display: flex; flex-direction: column; background: var(--negro); border-top: 1px solid var(--dorado-oscuro); }
+.panel-menu[hidden] { display: none; }
+.panel-menu a { padding: 14px clamp(16px, 3vw, 48px); border-bottom: 1px solid rgba(140, 100, 37, 0.35); }
+.panel-menu a:hover { color: var(--dorado-vivo); }
+
+/* PORTADA */
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.hero { text-align: center; padding-bottom: 70px; }
+
+.hero-img {
+    width: 100%;
+    height: clamp(250px, 54vw, 640px);
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+.hero-boton {
+    display: inline-block;
+    margin-top: -6px;
+    padding: 14px 40px;
+    font: 600 0.95rem var(--serif);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dorado-vivo);
+    background: #000;
+    border: 1px solid var(--dorado);
+    border-radius: 999px;
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.2);
+    transition: background 0.25s, color 0.25s;
+}
+
+.hero-boton:hover { background: var(--dorado); color: var(--negro); }
+
+.boton {
+    display: inline-block;
+    padding: 14px 30px;
+    color: var(--negro);
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--dorado-vivo), var(--dorado-oscuro));
+    border-radius: 4px;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.boton:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(212, 175, 55, 0.3); }
+
+/* Una sola animación de entrada: la portada */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes aparecer { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    .hero-img { animation: aparecer 1s ease both; }
+    .hero-boton { animation: aparecer 1s ease 0.3s both; }
+}
+
+/* SECCIONES */
+.seccion { padding-block: 70px; border-top: 1px solid var(--dorado-oscuro); }
+.seccion > .contenedor > h2 { font-size: clamp(2rem, 5vw, 3rem); text-align: left; }
+.seccion > .contenedor > p { max-width: 520px; margin: 12px 0 36px; }
+
+.colecciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+
+.coleccion {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(160deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.coleccion:hover { border-color: var(--dorado); transform: translateY(-4px); }
+
+.coleccion img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; padding: 20px; }
+
+.coleccion h3 { font-size: 1.7rem; padding: 0 22px; }
+.coleccion span { padding: 6px 22px 22px; font-size: 0.95rem; }
+
+/* CATÁLOGO */
+.cabecera-pagina { padding-block: 56px 28px; }
+.cabecera-pagina h1 { font-size: clamp(2.6rem, 7vw, 4.4rem); text-align: left; }
+.cabecera-pagina p { max-width: 540px; margin: 14px 0 0; }
+
+.filtros { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 32px; }
+
+.filtros button {
+    padding: 9px 20px;
+    font: 500 0.95rem var(--sans);
+    color: var(--dorado);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.filtros button:hover { border-color: var(--dorado); }
+
+.filtros button[aria-pressed="true"] {
+    color: var(--negro);
+    background: var(--dorado);
+    border-color: var(--dorado-vivo);
+}
+
+.catalogo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+    padding-bottom: 90px;
+}
+
+.reloj {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(160deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+}
+
+.reloj:hover { border-color: var(--dorado); }
+
+.reloj-foto {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(110, 31, 42, 0.55), transparent 70%);
+}
+
+.reloj-foto img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    padding: 22px;
+    transition: transform 0.5s ease;
+}
+
+.reloj:hover .reloj-foto img { transform: scale(1.06); }
+
+.etiqueta {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dorado-vivo);
+    background: var(--vino);
+    border-radius: 999px;
+}
+
+.reloj-info { display: flex; flex-direction: column; gap: 6px; padding: 18px 22px 24px; }
+.reloj-info h3 { font-size: 1.55rem; }
+.reloj-info p { margin: 0; font-size: 0.95rem; }
+.precio { margin-top: 8px; font: 600 1.35rem var(--sans); color: var(--dorado-vivo); }
+.reloj-info .boton { margin-top: 14px; padding: 12px 20px; text-align: center; }
+
+/* PIE */
+.pie { padding-block: 34px; text-align: center; border-top: 1px solid var(--dorado-oscuro); font-size: 0.9rem; }
+.pie strong { display: block; font: 600 1.5rem var(--serif); color: var(--dorado); }
+
+/* TABLET Y CELULAR: el menú se guarda en la hamburguesa */
+@media (max-width: 860px) {
+    .menu, .barra > .divisor { display: none; }
+    .logo { height: 46px; }
+}
+
+/* CELULARES */
+@media (max-width: 600px) {
+    .seccion { padding-block: 52px; }
+    .catalogo { grid-template-columns: 1fr; }
+}
+
+
+
+/* =========================================
+   SHUDOROKY — PANEL DE ADMINISTRACIÓN
+========================================= */
+
+.admin {
+    max-width: 1000px;
+    padding-top: 55px;
+    padding-bottom: 80px;
+}
+
+.admin > h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+/* FORMULARIOS */
+
+.admin .formulario {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    padding: clamp(20px, 4vw, 35px);
+    margin-bottom: 40px;
+    background: linear-gradient(145deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 8px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+}
+
+.admin .formulario label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--dorado-vivo);
+    font-weight: 600;
+}
+
+.admin .formulario input,
+.admin .formulario textarea,
+.admin .formulario select {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 14px;
+    color: #E9D8AC;
+    background: #100B0B;
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 4px;
+    outline: none;
+    font-family: var(--sans);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin .formulario input:focus,
+.admin .formulario textarea:focus,
+.admin .formulario select:focus {
+    border-color: var(--dorado-vivo);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.admin .formulario input::placeholder,
+.admin .formulario textarea::placeholder {
+    color: #8E7955;
+}
+
+.admin .formulario textarea {
+    resize: vertical;
+}
+
+.admin .formulario input[type="file"] {
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
+.admin .formulario input[type="file"]::file-selector-button {
+    padding: 8px 12px;
+    margin-right: 12px;
+    color: var(--negro);
+    background: var(--dorado);
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* BOTONES DEL PANEL */
+
+.admin .formulario .boton {
+    align-self: end;
+    min-height: 48px;
+    border: 0;
+    cursor: pointer;
+}
+
+.admin .formulario .boton:hover {
+    transform: translateY(-2px);
+}
+
+/* MENSAJES */
+
+.admin .mensaje {
+    align-self: center;
+    margin: 0;
+    color: var(--dorado-vivo);
+    font-size: 0.9rem;
+}
+
+.admin .formulario label,
+.admin .formulario .boton,
+.admin .formulario .mensaje {
+    min-width: 0;
+}
+
+/* SECCIÓN DE RELOJES */
+
+#panel > h2 {
+    margin: 45px 0 22px;
+    padding-bottom: 14px;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    border-bottom: 1px solid var(--dorado-oscuro);
+}
+
+/* LISTA DE RELOJES */
+
+.lista-admin {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 22px;
+}
+
+/* Elementos que genere admin.js */
+
+.lista-admin > * {
+    min-width: 0;
+    padding: 18px;
+    background: linear-gradient(145deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 7px;
+    overflow-wrap: anywhere;
+}
+
+.lista-admin > *:hover {
+    border-color: var(--dorado);
+}
+
+.lista-admin img {
+    width: 100%;
+    max-height: 190px;
+    object-fit: contain;
+    margin-bottom: 14px;
+}
+
+.lista-admin h3 {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.lista-admin p {
+    margin: 6px 0;
+}
+
+.lista-admin button {
+    margin: 8px 6px 0 0;
+    padding: 9px 14px;
+    color: var(--dorado-vivo);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.lista-admin button:hover {
+    color: var(--negro);
+    background: var(--dorado);
+    border-color: var(--dorado);
+}
+
+/* ENLACE PARA VOLVER A LA WEB */
+
+.enlace-admin {
+    padding: 9px 16px;
+    color: var(--dorado-vivo);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.enlace-admin:hover {
+    color: var(--negro);
+    background: var(--dorado);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+    .admin {
+        padding-top: 35px;
+    }
+
+    .admin .formulario {
+        grid-template-columns: 1fr;
+        gap: 17px;
+        padding: 20px;
+    }
+
+    .admin .formulario .boton {
+        width: 100%;
+    }
+
+    .lista-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .admin .formulario .mensaje {
+        text-align: center;
+    }
+}
+
+
+/* =========================================
+   SHUDOROKY — LISTA REAL DE RELOJES ADMIN
+========================================= */
+
+.admin .lista-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Cada reloj */
+
+.admin .fila-admin {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+    background: linear-gradient(120deg, var(--negro-suave), var(--tarjeta));
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 7px;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.admin .fila-admin:hover {
+    border-color: var(--dorado);
+    transform: translateY(-2px);
+}
+
+/* Fotografía */
+
+.admin .fila-admin img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    padding: 8px;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(140, 100, 37, 0.4);
+    border-radius: 5px;
+}
+
+/* Información */
+
+.admin .fila-admin div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.admin .fila-admin strong {
+    color: var(--dorado-vivo);
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    overflow-wrap: anywhere;
+}
+
+.admin .fila-admin span {
+    color: var(--texto);
+    font-size: 0.9rem;
+}
+
+/* Botón eliminar */
+
+.admin .fila-admin button {
+    padding: 10px 18px;
+    color: #F0C4C4;
+    background: rgba(110, 31, 42, 0.45);
+    border: 1px solid var(--vino-vivo);
+    border-radius: 4px;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.admin .fila-admin button:hover {
+    color: white;
+    background: var(--vino-vivo);
+    border-color: var(--vino-vivo);
+}
+
+/* Mensaje cuando no hay relojes */
+
+.admin .lista-admin:empty {
+    display: none;
+}
+
+/* Evitar que hidden sea anulado por otros estilos */
+
+.admin [hidden] {
+    display: none !important;
+}
+
+/* Adaptación a celulares */
+
+@media (max-width: 600px) {
+    .admin .fila-admin {
+        grid-template-columns: 75px minmax(0, 1fr);
+        gap: 12px;
+        padding: 13px;
+    }
+
+    .admin .fila-admin img {
+        width: 75px;
+        height: 75px;
+    }
+
+    .admin .fila-admin strong {
+        font-size: 1.2rem;
+    }
+
+    .admin .fila-admin button {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}

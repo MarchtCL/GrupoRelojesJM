@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relojes | Shudoroky</title>
+    <meta name="description" content="Catálogo de relojes Rolex, Casio y Patek Philippe de Shudoroky.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="encabezado">
+        <div class="barra">
+            <a href="index.html"><img src="png/logo-jm.png" alt="Grupo JM" class="logo"></a>
+            <span class="divisor" aria-hidden="true"></span>
+
+            <nav class="menu" aria-label="Principal">
+                    <a href="index.html">Inicio</a>
+                    <a href="index.html#nosotros">Nosotros</a>
+                    <a href="index.html#servicios">Servicios</a>
+                    <a href="relojes.html" aria-current="page">Productos</a>
+                    <a href="index.html#contacto">Contacto</a>
+            </nav>
+
+            <div class="acciones">
+                <a class="icono" href="relojes.html" aria-label="Buscar relojes"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></a>
+                <span class="divisor" aria-hidden="true"></span>
+                <button class="icono" id="botonMenu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="panelMenu"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+            </div>
+        </div>
+        <nav class="panel-menu" id="panelMenu" aria-label="Menú" hidden></nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="cabecera-pagina">
+            <h1>Relojes</h1>
+            <p>Filtra por marca y mira cada reloj con su precio.</p>
+        </section>
+
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por marca"></div>
+
+        <section class="catalogo" id="catalogo" aria-live="polite"></section>
+    </main>
+
+    <footer class="pie">
+        <strong>Shudoroky</strong>
+        <span>© 2026 Shudoroky. Todos los derechos reservados.</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

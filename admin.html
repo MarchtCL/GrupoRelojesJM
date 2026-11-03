@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Administrar relojes | Shudoroky</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="encabezado">
+        <div class="barra">
+            <a class="marca" href="index.html" aria-label="Grupo JM, inicio">Grupo JM</a>
+            <div class="acciones">
+                <a class="enlace-admin" href="relojes.html">Ver la web</a>
+                <button class="boton" id="salir" type="button" hidden>Salir</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="contenedor admin">
+        <h1>Administrar relojes</h1>
+
+        <form class="formulario" id="login">
+            <label>Correo <input type="email" id="correo" required autocomplete="username"></label>
+            <label>Contraseña <input type="password" id="clave" required autocomplete="current-password"></label>
+            <button class="boton" type="submit">Entrar</button>
+            <p class="mensaje" id="mensajeLogin" role="alert"></p>
+        </form>
+
+        <section id="panel" hidden>
+            <form class="formulario" id="formReloj">
+                <label>Marca
+                    <select id="marca" required>
+                        <option value="rolex">Rolex</option>
+                        <option value="patek">Patek Philippe</option>
+                        <option value="casio">Casio</option>
+                        <option value="ofertas">Ofertas</option>
+                        <option value="AP">AP</option>
+                        <option value="Cartier">Cartier</option>
+                        <option value="Invicta">Invicta</option>
+                        <option value="QYQ">Q&Q</option>
+                        <option value="RichardMille">Richard Mille</option>
+                        <option value="Tissot">Tissot</option>
+                        <option value="TechnoMarine">TechnoMarine</option>
+                    </select>
+                </label>
+                <label>Nombre <input type="text" id="nombre" required></label>
+                <label>Descripción <textarea id="descripcion" rows="3"></textarea></label>
+                <label>Precio (COP) <input type="number" id="precio" min="0" step="1" required></label>
+                <label>Foto <input type="file" id="foto" accept="image/*" required></label>
+                <button class="boton" type="submit" id="guardar">Agregar reloj</button>
+                <p class="mensaje" id="mensaje" role="status"></p>
+            </form>
+
+            <h2>Relojes cargados</h2>
+            <div class="lista-admin" id="lista"></div>
+        </section>
+    </main>
+
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+
+</body>
+</html>
