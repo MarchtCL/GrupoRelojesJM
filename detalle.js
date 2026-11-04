@@ -22,6 +22,8 @@
                 <h2 class="detalle-nombre" id="detalleNombre"></h2>
                 <p class="detalle-descripcion"></p>
                 <span class="detalle-precio"></span>
+                <span class="detalle-modelo"></span>
+                <span class="detalle-garantia"></span>
                 <a class="boton detalle-whatsapp"
                    target="_blank"
                    rel="noopener">
@@ -37,6 +39,8 @@
     const nombre = ventana.querySelector(".detalle-nombre");
     const descripcion = ventana.querySelector(".detalle-descripcion");
     const precio = ventana.querySelector(".detalle-precio");
+    const modelo = ventana.querySelector(".detalle-modelo");
+    const garantia = ventana.querySelector(".detalle-garantia");
     const whatsapp = ventana.querySelector(".detalle-whatsapp");
 
     function abrir(tarjeta) {
@@ -52,7 +56,8 @@
         foto.alt = titulo.textContent;
         nombre.textContent = titulo.textContent;
         descripcion.textContent = texto.textContent;
-
+        modelo.textContent = tarjeta.querySelector(".modelo")?.textContent || "";
+        garantia.textContent = tarjeta.querySelector(".garantia")?.textContent || "";
         precio.textContent = precioTarjeta
             ? precioTarjeta.textContent
             : "";
