@@ -155,14 +155,15 @@ formReloj.addEventListener("submit", async evento => {
             .getPublicUrl(ruta);
 
         const guardado = await db.from("relojes").insert({
-            marca: document.getElementById("marca").value,
-            nombre: document.getElementById("nombre").value.trim(),
-            descripcion: document.getElementById("descripcion").value.trim(),
-            modelo: document.getElementById("modelo").value.trim(),
-            garantia: document.getElementById("garantia").value.trim(),
-            imagen_url: data.publicUrl,
-            imagen_ruta: ruta
-        });
+    marca: document.getElementById("marca").value,
+    nombre: document.getElementById("nombre").value.trim(),
+    descripcion: document.getElementById("descripcion").value.trim(),
+    precio: document.getElementById("precio").value || null,
+    modelo: document.getElementById("modelo").value.trim(),
+    garantia: document.getElementById("garantia").value.trim(),
+    imagen_url: data.publicUrl,
+    imagen_ruta: ruta
+});
 
         if (guardado.error) throw guardado.error;
 
