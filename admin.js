@@ -158,7 +158,6 @@ formReloj.addEventListener("submit", async evento => {
             marca: document.getElementById("marca").value,
             nombre: document.getElementById("nombre").value.trim(),
             descripcion: document.getElementById("descripcion").value.trim(),
-            precio: Number(document.getElementById("precio").value),
             imagen_url: data.publicUrl,
             imagen_ruta: ruta
         });
