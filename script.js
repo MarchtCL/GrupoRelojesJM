@@ -132,11 +132,17 @@ function tarjeta(reloj, clave) {
 
                 <p>${escaparHTML(reloj.descripcion)}</p>
 
+                <span class="modelo" hidden>
+                    ${escaparHTML(reloj.modelo)}
+                </span>
+
+                <span class="garantia" hidden>
+                    ${escaparHTML(reloj.garantia)}
+                </span>
+
                 ${reloj.precio !== undefined && reloj.precio !== null && reloj.precio !== ""
                     ? `<span class="precio">${escaparHTML(reloj.precio)}</span>`
                     : ""}
-
-            
             </div>
         </article>
     `;
