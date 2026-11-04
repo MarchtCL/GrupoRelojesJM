@@ -158,6 +158,8 @@ formReloj.addEventListener("submit", async evento => {
             marca: document.getElementById("marca").value,
             nombre: document.getElementById("nombre").value.trim(),
             descripcion: document.getElementById("descripcion").value.trim(),
+            modelo: document.getElementById("modelo").value.trim(),
+            garantia: document.getElementById("garantia").value.trim(),
             imagen_url: data.publicUrl,
             imagen_ruta: ruta
         });
@@ -225,7 +227,7 @@ function crearFila(reloj) {
 
     const detalle = document.createElement("span");
     detalle.textContent =
-        `${reloj.marca} · ${formatoPrecio(reloj.precio)}`;
+        `${reloj.marca} · ${reloj.modelo} · ${reloj.garantia}`;
 
     info.append(nombre, detalle);
 
