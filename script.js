@@ -24,52 +24,26 @@ const colecciones = {
     rolex: {
         nombre: "Rolex",
         productos: [
-            { imagen: "ROLEX/rolex.png", nombre: "Rolex clásico", descripcion: "Reloj Rolex de estilo clásico." },
-            { imagen: "ROLEX/rolex2.JPG", nombre: "Rolex GMT-Master II", descripcion: "Reloj Rolex GMT-Master II CARA VERDE." },
-            { imagen: "ROLEX/rolex3.jpg", nombre: "Rolex Land-Dweller", descripcion: "Reloj Rolex Land-Dweller." },
-            { imagen: "ROLEX/rolex4.jpg", nombre: "Rolex GMT-Master II", descripcion: "Reloj Rolex GMT-Master II cara negra con brazalete de acero y oro." },
-            { imagen: "ROLEX/rolex5.jpg", nombre: "Rolex GMT-Master II", descripcion: "Reloj Rolex GMT-Master II (Pepsi)." },
-            { imagen: "ROLEX/rolex6.jpg", nombre: "Rolex GMT-Master II", descripcion: "Reloj Rolex GMT-Master II plateado con cara verde." },
-            { imagen: "ROLEX/rolex7.jpg", nombre: "Rolex Datejust", descripcion: "Reloj Rolex Datejust dorado con cara negra." },
-            { imagen: "ROLEX/rolex8.jpg", nombre: "Rolex GMT-Master II", descripcion: "Reloj Rolex GMT-Master II plateado con cara azul." },
-            { imagen: "ROLEX/rolex9.jpg", nombre: "Rolex Datejust", descripcion: "Reloj Rolex Datejust cara blanca." },
-            { imagen: "ROLEX/rolex10.jpg", nombre: "Rolex Land-Dweller", descripcion: "Reloj Rolex Land-Dweller dorado con cara verde." },
-            { imagen: "ROLEX/rolex11.jpg", nombre: "Rolex Land-Dweller", descripcion: "Reloj Rolex Land-Dweller." }
         ]
     },
 
     patek: {
         nombre: "Patek Philippe",
         productos: [
-            { imagen: "PATEK/patek.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus." },
-            { imagen: "PATEK/patek2.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus plateado con azul." },
-            { imagen: "PATEK/patek3.jpg", nombre: "Patek Philippe Aquanaut", descripcion: "Reloj Patek Philippe Aquanaut F." },
-            { imagen: "PATEK/patek4.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus dorado con platiado." },
-            { imagen: "PATEK/patek5.jpg", nombre: "Patek Philippe Calatrava", descripcion: "Reloj Patek Philippe Calatrava." },
-            { imagen: "PATEK/patek6.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus plateado con dorado F." },
-            { imagen: "PATEK/patek7.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus plateado con negro." },
-            { imagen: "PATEK/patek8.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus dorado con negro claro." },
-            { imagen: "PATEK/patek9.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus dorado con negro oscuro." },
-            { imagen: "PATEK/patek10.jpg", nombre: "Patek Philippe Nautilus", descripcion: "Reloj Patek Philippe Nautilus plateado con blanco intenso." }
+          
         ]
     },
 
     casio: {
         nombre: "Casio",
         productos: [
-            { imagen: "CASIO/casio.png", nombre: "Casio clásico", descripcion: "Reloj Casio clásico." },
-            { imagen: "CASIO/casio1.jpg", nombre: "Casio Vintage", descripcion: "Reloj Casio con estilo vintage." },
-            { imagen: "CASIO/casio2.jpg", nombre: "Casio Edifice", descripcion: 'Casio Edifice "Slim" con bisel octogonal.' },
-            { imagen: "CASIO/casio3.jpg", nombre: "Casio Edifice octogonal", descripcion: "Reloj Casio con bisel octogonal." },
-            { imagen: "CASIO/casio4.jpg", nombre: "Casio G-Shock GA-2100", descripcion: "Reloj Casio G-Shock GA-2100." },
-            { imagen: "CASIO/casio5.jpg", nombre: "G-Shock GA-2100", descripcion: "G-Shock GA-2100 modificado con un kit de resina transparente oscura." }
+
         ]
     },
 
     ofertas: {
         nombre: "Ofertas",
         productos: [
-            { imagen: "png/oferta.png", nombre: "Reloj en oferta", descripcion: "Reloj disponible en oferta." }
         ]
     },
 
@@ -162,12 +136,7 @@ function tarjeta(reloj, clave) {
                     ? `<span class="precio">${escaparHTML(reloj.precio)}</span>`
                     : ""}
 
-                <a class="boton"
-                   href="${enlaceWhatsApp(reloj)}"
-                   target="_blank"
-                   rel="noopener">
-                    Preguntar por WhatsApp
-                </a>
+            
             </div>
         </article>
     `;
@@ -240,7 +209,7 @@ async function cargarRelojesSupabase() {
     try {
         const { data, error } = await db
             .from("relojes")
-            .select("marca, nombre, descripcion, precio, imagen_url, created_at")
+            .select("marca, nombre, descripcion, modelo, garantia, precio, imagen_url, created_at")
             .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -254,6 +223,8 @@ async function cargarRelojesSupabase() {
                 imagen: reloj.imagen_url,
                 nombre: reloj.nombre,
                 descripcion: reloj.descripcion || "Consulta más información por WhatsApp.",
+                modelo: reloj.modelo,
+                garantia: reloj.garantia,
                 precio: reloj.precio
             });
         });
