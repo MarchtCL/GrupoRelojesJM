@@ -55,9 +55,13 @@
         foto.src = imagen.src;
         foto.alt = titulo.textContent;
         nombre.textContent = titulo.textContent;
-        descripcion.textContent = texto.textContent;
-        modelo.textContent = tarjeta.querySelector(".modelo")?.textContent || "";
-        garantia.textContent = tarjeta.querySelector(".garantia")?.textContent || "";
+        descripcion.textContent = "Descripción: " + texto.textContent;
+
+modelo.textContent = "Modelo: " +
+    (tarjeta.dataset.modelo || "No especificado");
+
+garantia.textContent = "Garantía: " +
+    (tarjeta.dataset.garantia || "No especificada");
         precio.textContent = precioTarjeta
             ? precioTarjeta.textContent
             : "";
