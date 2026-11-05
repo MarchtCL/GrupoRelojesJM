@@ -943,3 +943,19 @@ body:has(dialog[open]) { overflow: hidden; }
 
 /* Las tarjetas que no coinciden con la búsqueda se esconden */
 .reloj[hidden] { display: none; }
+/* Logo del encabezado */
+.logo {
+    display: block;
+    width: clamp(150px, 20vw, 190px);
+    height: auto;
+    object-fit: contain;
+    background: transparent;
+    /* Quita el cuadro negro: el negro se vuelve transparente */
+    mix-blend-mode: lighten;
+    /* Suaviza los bordes para que no se note el corte */
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse at center, #000 62%, transparent 100%);
+}
+
+/* El logo vive en una capa propia para que la mezcla funcione */
+.encabezado .barra { isolation: isolate; }
