@@ -86,7 +86,7 @@ h1, h2, h3 { font-family: var(--serif); color: var(--dorado); font-weight: 600; 
     height: 40px;
     padding: 0;
     color: var(--dorado);
-    background: none;
+    background: transparent;
     border: 0;
     cursor: pointer;
     transition: color 0.25s;
@@ -814,3 +814,132 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
     .detalle[open] { animation: aparecer 0.35s ease both; }
 }
+
+/* =========================================
+   Grupo JM — VENTANA DE DETALLE ORDENADA
+   (cada dato en su propia fila y el botón al final)
+========================================= */
+
+.detalle-info { display: flex; flex-direction: column; min-width: 0; }
+
+.detalle-datos { margin: 22px 0 0; border-top: 1px solid rgba(140, 100, 37, 0.4); }
+
+.detalle-datos div {
+    display: block;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(140, 100, 37, 0.4);
+}
+
+.detalle-datos dt {
+    margin-bottom: 4px;
+    font: 500 0.78rem var(--sans);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dorado);
+}
+
+.detalle-datos dd {
+    margin: 0;
+    line-height: 1.6;
+    text-align: left;
+    color: #E9D8AC;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.detalle-pie {
+    display: grid;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.detalle-precio { margin: 0; font: 600 1.8rem var(--sans); color: var(--dorado-vivo); }
+.detalle-whatsapp { display: block; padding: 15px 20px; text-align: center; }
+
+/* Para que un nombre largo no quede debajo de la X */
+.detalle-nombre { padding-right: 44px; }
+
+/* En el celular la foto es más baja para que el botón se vea sin bajar tanto */
+@media (max-width: 699px) {
+    .detalle-foto { aspect-ratio: 16 / 10; }
+    .detalle-caja { gap: 14px; padding: 30px 22px 24px; }
+}
+/* =========================================
+   Grupo JM — SECCIÓN NOSOTROS
+========================================= */
+
+.valores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.valor {
+    position: relative;
+    padding: 28px 24px 26px;
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+}
+
+.valor::before,
+.valor::after { content: ""; position: absolute; z-index: 0; }
+
+.valor::before { inset: 0; background: var(--dorado-oscuro); }
+
+.valor::after {
+    inset: 1px;
+    background: linear-gradient(160deg, var(--negro-suave), var(--tarjeta));
+    clip-path: polygon(0 0, calc(100% - 21px) 0, 100% 21px, 100% 100%, 21px 100%, 0 calc(100% - 21px));
+}
+
+.valor > * { position: relative; z-index: 1; }
+
+.valor-rombo { display: block; width: 12px; height: 12px; margin-bottom: 16px; background: var(--dorado); transform: rotate(45deg); }
+.valor h3 { font-size: 1.7rem; }
+.valor p { margin: 10px 0 0; font-size: 0.98rem; }
+/* Enlaces y etiqueta dentro de las tarjetas de Servicios */
+.valor-enlace {
+    display: inline-block;
+    margin-top: 14px;
+    padding-bottom: 2px;
+    font-weight: 500;
+    color: var(--dorado-vivo);
+    border-bottom: 1px solid var(--dorado-oscuro);
+    transition: border-color 0.25s;
+}
+
+.valor-enlace:hover { border-color: var(--dorado-vivo); }
+
+.valor-etiqueta {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 3px 14px;
+    font-size: 0.8rem;
+    color: var(--dorado);
+    border: 1px dashed var(--dorado-oscuro);
+    border-radius: 999px;
+}
+/* =========================================
+   Grupo JM — BUSCADOR
+========================================= */
+
+.buscador { max-width: 520px; margin-bottom: 20px; }
+
+.buscador input {
+    width: 100%;
+    padding: 13px 18px;
+    font: 400 1rem var(--sans);
+    color: #E9D8AC;
+    background: #100B0B;
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 999px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.buscador input::placeholder { color: #8E7955; }
+.buscador input:focus { border-color: var(--dorado-vivo); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12); }
+.buscador-vacio { margin: 12px 0 0; color: var(--dorado-vivo); }
+
+/* Las tarjetas que no coinciden con la búsqueda se esconden */
+.reloj[hidden] { display: none; }

@@ -1,116 +1,108 @@
-// DETALLE DEL RELOJ
+// DETALLE DEL RELOJ: al tocar una tarjeta se abre una ventana con todos los datos
 (() => {
     const lista = document.getElementById("catalogo");
     if (!lista) return;
 
+    // La ventana se crea aquí, así relojes.html no necesita cambios grandes
     const ventana = document.createElement("dialog");
     ventana.className = "detalle";
     ventana.setAttribute("aria-labelledby", "detalleNombre");
-
     ventana.innerHTML = `
         <div class="detalle-caja">
             <span class="esquina e1"></span>
             <span class="esquina e2"></span>
             <span class="esquina e3"></span>
             <span class="esquina e4"></span>
-
             <button type="button" class="detalle-cerrar" aria-label="Cerrar">✕</button>
 
             <img class="detalle-foto" alt="">
 
             <div class="detalle-info">
                 <h2 class="detalle-nombre" id="detalleNombre"></h2>
-                <p class="detalle-descripcion"></p>
-                <span class="detalle-precio"></span>
-                <span class="detalle-modelo"></span>
-                <span class="detalle-garantia"></span>
-                <a class="boton detalle-whatsapp"
-                   target="_blank"
-                   rel="noopener">
-                    Preguntar por WhatsApp
-                </a>
-            </div>
-        </div>
-    `;
 
+                <dl class="detalle-datos">
+                    <div><dt>Descripción</dt><dd class="d-descripcion"></dd></div>
+                    <div><dt>Modelo</dt><dd class="d-modelo"></dd></div>
+                    <div><dt>Garantía</dt><dd class="d-garantia"></dd></div>
+                </dl>
+
+                <div class="detalle-pie">
+                    <span class="detalle-precio"></span>
+                    <a class="boton detalle-whatsapp" target="_blank" rel="noopener">Preguntar por WhatsApp</a>
+                </div>
+            </div>
+        </div>`;
     document.body.append(ventana);
 
     const foto = ventana.querySelector(".detalle-foto");
     const nombre = ventana.querySelector(".detalle-nombre");
-    const descripcion = ventana.querySelector(".detalle-descripcion");
+    const dDescripcion = ventana.querySelector(".d-descripcion");
+    const dModelo = ventana.querySelector(".d-modelo");
+    const dGarantia = ventana.querySelector(".d-garantia");
     const precio = ventana.querySelector(".detalle-precio");
-    const modelo = ventana.querySelector(".detalle-modelo");
-    const garantia = ventana.querySelector(".detalle-garantia");
     const whatsapp = ventana.querySelector(".detalle-whatsapp");
 
+    // Busca el reloj en la lista de script.js (por su foto) para sacar modelo y garantía
+    function buscarDatos(tarjeta) {
+        const img = tarjeta.querySelector("img");
+        if (!img || typeof colecciones === "undefined") return {};
+        const imagen = img.getAttribute("src");
+
+        for (const coleccion of Object.values(colecciones)) {
+            const reloj = coleccion.productos.find(p => p.imagen === imagen);
+            if (reloj) return reloj;
+        }
+        return {};
+    }
+
+    // Si la tarjeta no trae botón de WhatsApp, el enlace se arma con tu número de script.js
+    const enlaceDirecto = titulo => {
+        const numero = typeof WHATSAPP === "undefined" ? "" : WHATSAPP;
+        return `https://wa.me/${numero}?text=${encodeURIComponent(`Hola, me interesa el ${titulo}.`)}`;
+    };
+
+    // Copia los datos de la tarjeta tocada a la ventana
     function abrir(tarjeta) {
-        const imagen = tarjeta.querySelector("img");
-        const titulo = tarjeta.querySelector("h3");
-        const texto = tarjeta.querySelector(".reloj-info p");
-        const precioTarjeta = tarjeta.querySelector(".precio");
-        const enlace = tarjeta.querySelector("a.boton");
+        const datos = buscarDatos(tarjeta);
+        const texto = selector => (tarjeta.querySelector(selector) || {}).textContent || "";
+        const titulo = texto("h3") || texto("h2") || "Reloj";
+        const img = tarjeta.querySelector("img");
+        const enlace = tarjeta.querySelector("a[href*='wa.me']");
 
-        if (!imagen || !titulo || !texto) return;
-
-        foto.src = imagen.src;
-        foto.alt = titulo.textContent;
-        nombre.textContent = titulo.textContent;
-        descripcion.textContent = "Descripción: " + texto.textContent;
-
-modelo.textContent = "Modelo: " +
-    (tarjeta.dataset.modelo || "No especificado");
-
-garantia.textContent = "Garantía: " +
-    (tarjeta.dataset.garantia || "No especificada");
-        precio.textContent = precioTarjeta
-            ? precioTarjeta.textContent
-            : "";
-
-        whatsapp.href = enlace
-            ? enlace.href
-            : "#";
-
+        foto.src = img ? img.src : "";
+        foto.alt = titulo;
+        nombre.textContent = titulo;
+        dDescripcion.textContent = texto(".reloj-info p") || datos.descripcion || "Sin descripción";
+        dModelo.textContent = datos.modelo || "No especificado";
+        dGarantia.textContent = datos.garantia || "No especificada";
+        precio.textContent = texto(".precio");
+        whatsapp.href = enlace ? enlace.href : enlaceDirecto(titulo);
         ventana.showModal();
     }
 
-    // Toda la tarjeta abre los detalles, excepto WhatsApp.
+    // Tocar la tarjeta (menos su botón de WhatsApp) abre el detalle
     lista.addEventListener("click", evento => {
         if (evento.target.closest("a")) return;
-
         const tarjeta = evento.target.closest(".reloj");
         if (tarjeta) abrir(tarjeta);
     });
 
-    // Accesibilidad con teclado.
+    // Con teclado: Enter o espacio sobre la tarjeta
     lista.addEventListener("keydown", evento => {
         if (evento.key !== "Enter" && evento.key !== " ") return;
-
         const tarjeta = evento.target.closest(".reloj");
         if (!tarjeta || evento.target !== tarjeta) return;
-
         evento.preventDefault();
         abrir(tarjeta);
     });
 
-    function prepararTarjetas() {
-        lista.querySelectorAll(".reloj").forEach(tarjeta => {
-            tarjeta.tabIndex = 0;
-            tarjeta.setAttribute("role", "button");
-            tarjeta.setAttribute("aria-label", "Ver detalles de " +
-                (tarjeta.querySelector("h3")?.textContent || "este reloj"));
-        });
-    }
+    // Las tarjetas se vuelven a dibujar al filtrar: cada nueva se puede enfocar con Tab
+    const preparar = () => lista.querySelectorAll(".reloj:not([tabindex])").forEach(t => { t.tabIndex = 0; });
+    new MutationObserver(preparar).observe(lista, { childList: true });
+    preparar();
 
-    new MutationObserver(prepararTarjetas).observe(lista, {
-        childList: true
-    });
-
-    prepararTarjetas();
-
-    ventana.querySelector(".detalle-cerrar").addEventListener("click", () => {
-        ventana.close();
-    });
-
+    // Cerrar: con la X, tocando fuera de la ventana, o con Escape (lo hace el navegador)
+    ventana.querySelector(".detalle-cerrar").addEventListener("click", () => ventana.close());
     ventana.addEventListener("click", evento => {
         if (evento.target === ventana) ventana.close();
     });
