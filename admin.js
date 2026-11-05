@@ -9,6 +9,11 @@ const lista = document.getElementById("lista");
 const mensaje = document.getElementById("mensaje");
 const mensajeLogin = document.getElementById("mensajeLogin");
 
+const importarDrive = document.getElementById("importarDrive");
+const mensajeDrive = document.getElementById("mensajeDrive");
+
+const TAMANO_LOTE = 100;
+
 const formatoPrecio = precio =>
     Number(precio).toLocaleString("es-CO", {
         style: "currency",
@@ -16,7 +21,10 @@ const formatoPrecio = precio =>
         maximumFractionDigits: 0
     });
 
+// ======================================
 // MOSTRAR LOGIN O PANEL
+// ======================================
+
 function mostrarPanel(haySesion) {
     login.hidden = haySesion;
     panel.hidden = !haySesion;
@@ -25,7 +33,10 @@ function mostrarPanel(haySesion) {
     if (haySesion) cargarLista();
 }
 
+// ======================================
 // REDUCIR FOTOGRAFÍA
+// ======================================
+
 function reducirFoto(archivo, maximo = 1000) {
     return new Promise((ok, fallo) => {
         if (!archivo) {
@@ -36,14 +47,22 @@ function reducirFoto(archivo, maximo = 1000) {
         const img = new Image();
 
         img.onload = () => {
-            const k = Math.min(1, maximo / Math.max(img.width, img.height));
+            const k = Math.min(
+                1,
+                maximo / Math.max(img.width, img.height)
+            );
 
             const lienzo = document.createElement("canvas");
+
             lienzo.width = Math.round(img.width * k);
             lienzo.height = Math.round(img.height * k);
 
             lienzo.getContext("2d").drawImage(
-                img, 0, 0, lienzo.width, lienzo.height
+                img,
+                0,
+                0,
+                lienzo.width,
+                lienzo.height
             );
 
             lienzo.toBlob(
@@ -116,7 +135,8 @@ salir.addEventListener("click", async () => {
     const { error } = await db.auth.signOut();
 
     if (error) {
-        mensaje.textContent = "No se pudo cerrar sesión: " + error.message;
+        mensaje.textContent =
+            "No se pudo cerrar sesión: " + error.message;
     } else {
         mostrarPanel(false);
     }
@@ -155,15 +175,15 @@ formReloj.addEventListener("submit", async evento => {
             .getPublicUrl(ruta);
 
         const guardado = await db.from("relojes").insert({
-    marca: document.getElementById("marca").value,
-    nombre: document.getElementById("nombre").value.trim(),
-    descripcion: document.getElementById("descripcion").value.trim(),
-    precio: document.getElementById("precio").value || null,
-    modelo: document.getElementById("modelo").value.trim(),
-    garantia: document.getElementById("garantia").value.trim(),
-    imagen_url: data.publicUrl,
-    imagen_ruta: ruta
-});
+            marca: document.getElementById("marca").value,
+            nombre: document.getElementById("nombre").value.trim(),
+            descripcion: document.getElementById("descripcion").value.trim(),
+            precio: document.getElementById("precio").value || null,
+            modelo: document.getElementById("modelo").value.trim(),
+            garantia: document.getElementById("garantia").value.trim(),
+            imagen_url: data.publicUrl,
+            imagen_ruta: ruta
+        });
 
         if (guardado.error) throw guardado.error;
 
@@ -173,7 +193,8 @@ formReloj.addEventListener("submit", async evento => {
         await cargarLista();
 
     } catch (error) {
-        mensaje.textContent = "No se pudo guardar: " + error.message;
+        mensaje.textContent =
+            "No se pudo guardar: " + error.message;
 
     } finally {
         boton.disabled = false;
@@ -195,7 +216,8 @@ async function cargarLista() {
     lista.replaceChildren();
 
     if (error) {
-        lista.textContent = "No se pudo cargar la lista: " + error.message;
+        lista.textContent =
+            "No se pudo cargar la lista: " + error.message;
         return;
     }
 
@@ -227,8 +249,9 @@ function crearFila(reloj) {
     nombre.textContent = reloj.nombre;
 
     const detalle = document.createElement("span");
+
     detalle.textContent =
-        `${reloj.marca} · ${reloj.modelo} · ${reloj.garantia}`;
+        `${reloj.marca} · ${reloj.modelo || ""} · ${reloj.garantia || ""}`;
 
     info.append(nombre, detalle);
 
@@ -266,7 +289,10 @@ async function eliminar(reloj) {
             .remove([reloj.imagen_ruta]);
 
         if (errorFoto) {
-            console.error("No se pudo eliminar la fotografía:", errorFoto);
+            console.error(
+                "No se pudo eliminar la fotografía:",
+                errorFoto
+            );
         }
     }
 
@@ -290,3 +316,179 @@ db.auth.getSession().then(({ data, error }) => {
     console.error("Error de conexión con Supabase:", error);
     mostrarPanel(false);
 });
+
+// ======================================
+// IMPORTAR DESDE GOOGLE DRIVE
+// ======================================
+
+async function llamarImportador(datos) {
+    const { data, error } = await db.auth.getSession();
+
+    if (error) throw error;
+
+    const session = data.session;
+
+    if (!session) {
+        throw new Error("Debes iniciar sesión nuevamente.");
+    }
+
+    const respuesta = await fetch(
+        "https://kfsgrvjzstonombwtjpv.supabase.co/functions/v1/importar-grupo-JM",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify(datos)
+        }
+    );
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok || !resultado.success) {
+        throw new Error(
+            resultado.error || "Error en el importador."
+        );
+    }
+
+    return resultado;
+}
+
+// ======================================
+// IMPORTACIÓN AUTOMÁTICA POR LOTES
+// ======================================
+
+if (importarDrive && mensajeDrive) {
+
+    importarDrive.addEventListener("click", async () => {
+
+        importarDrive.disabled = true;
+        importarDrive.textContent = "Preparando importación...";
+
+        mensajeDrive.textContent =
+            "Conectando con Google Drive...";
+
+        let totalProcesadas = 0;
+        let totalOmitidas = 0;
+
+        try {
+
+            // 1. COMPROBAR FOTOGRAFÍAS
+
+            const escaneo = await llamarImportador({
+                action: "scan"
+            });
+
+            const total = escaneo.fotografiasEncontradas;
+
+            if (!Number.isInteger(total) || total < 0) {
+                throw new Error("La cantidad de fotografías recibida no es válida.");
+            }
+
+            if (total === 0) {
+                mensajeDrive.textContent =
+                    "No se encontraron fotografías.";
+                return;
+            }
+
+            const confirmar = confirm(
+                `Se encontraron ${total} fotografías en Google Drive.\n\n` +
+                `Se importarán en lotes de ${TAMANO_LOTE}.\n\n` +
+                `Las fotografías que ya existan se omitirán automáticamente.\n\n` +
+                `¿Deseas comenzar la importación?`
+            );
+
+            if (!confirmar) {
+                mensajeDrive.textContent =
+                    "Importación cancelada. No se inició la carga.";
+                return;
+            }
+
+            // 2. CALCULAR LOTES
+
+            const totalLotes = Math.ceil(total / TAMANO_LOTE);
+
+            let offset = 0;
+            let numeroLote = 0;
+
+            // 3. IMPORTAR TODOS LOS LOTES
+
+            while (offset < total) {
+
+                numeroLote++;
+
+                importarDrive.textContent =
+                    `Importando ${numeroLote}/${totalLotes}`;
+
+                mensajeDrive.textContent =
+                    `Procesando lote ${numeroLote} de ${totalLotes}...\n` +
+                    `Fotografías revisadas: ${offset} de ${total}`;
+
+                const resultado = await llamarImportador({
+                    action: "import",
+                    offset: offset,
+                    batchSize: TAMANO_LOTE
+                });
+
+                if (
+                    !Number.isInteger(resultado.siguienteOffset) ||
+                    resultado.siguienteOffset <= offset ||
+                    resultado.siguienteOffset > total
+                ) {
+                    throw new Error(
+                        "El importador devolvió una posición incorrecta. Se detuvo para evitar repetir el proceso."
+                    );
+                }
+
+                totalProcesadas += resultado.procesadas || 0;
+                totalOmitidas += resultado.omitidas || 0;
+
+                offset = resultado.siguienteOffset;
+
+                mensajeDrive.textContent =
+                    `Lote ${numeroLote} de ${totalLotes} completado.\n` +
+                    `Revisadas: ${offset} de ${total}.\n` +
+                    `Nuevas: ${totalProcesadas}.\n` +
+                    `Duplicadas omitidas: ${totalOmitidas}.`;
+            }
+
+            // 4. IMPORTACIÓN COMPLETADA
+
+            importarDrive.textContent = "Importación completada";
+
+            mensajeDrive.textContent =
+                `¡Importación finalizada!\n\n` +
+                `Total revisadas: ${total}\n` +
+                `Fotografías nuevas: ${totalProcesadas}\n` +
+                `Duplicadas omitidas: ${totalOmitidas}\n` +
+                `Lotes procesados: ${totalLotes}`;
+
+            await cargarLista();
+
+        } catch (error) {
+
+            mensajeDrive.textContent =
+                `La importación se detuvo.\n\n` +
+                `Fotografías confirmadas como nuevas: ${totalProcesadas}\n` +
+                `Duplicadas omitidas: ${totalOmitidas}\n\n` +
+                `Motivo: ${error.message}\n\n` +
+                `Puedes volver a intentarlo. Los registros existentes se comprobarán antes de insertarlos.`;
+
+            importarDrive.textContent =
+                "Reintentar importación";
+
+        } finally {
+
+            importarDrive.disabled = false;
+
+            if (
+                importarDrive.textContent !==
+                "Reintentar importación"
+            ) {
+                importarDrive.textContent =
+                    "Importar desde Google Drive";
+            }
+        }
+    });
+}
