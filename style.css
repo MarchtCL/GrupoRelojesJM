@@ -959,3 +959,71 @@ body:has(dialog[open]) { overflow: hidden; }
 
 /* El logo vive en una capa propia para que la mezcla funcione */
 .encabezado .barra { isolation: isolate; }
+
+/* =========================================
+   GRUPO JM — COLECCIONES COMPACTAS
+   Página principal
+========================================= */
+
+.colecciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+}
+
+/* Tarjeta */
+.coleccion {
+    max-width: 260px;
+    margin-inline: auto;
+    width: 100%;
+    border-radius: 5px;
+}
+
+/* Imagen */
+.coleccion img {
+    width: 100%;
+    height: 145px;
+    aspect-ratio: auto;
+    object-fit: contain;
+    padding: 12px;
+}
+
+/* Título */
+.coleccion h3 {
+    font-size: 1.3rem;
+    padding: 0 14px;
+}
+
+/* Descripción */
+.coleccion span {
+    padding: 5px 14px 14px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+    .colecciones {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .coleccion {
+        max-width: none;
+    }
+
+    .coleccion img {
+        height: 115px;
+        padding: 8px;
+    }
+
+    .coleccion h3 {
+        font-size: 1.05rem;
+        padding-inline: 10px;
+    }
+
+    .coleccion span {
+        padding: 5px 10px 12px;
+        font-size: 0.75rem;
+    }
+}
