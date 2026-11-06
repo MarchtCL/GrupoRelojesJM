@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,36 +6,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
     <title>Administrar relojes | Grupo JM</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="encabezado">
         <div class="barra">
-            <a class="marca" href="index.html" aria-label="Grupo JM, inicio">Grupo JM</a>
+            <a class="marca" href="index.html" aria-label="Grupo JM, inicio">
+                Grupo JM
+            </a>
+
             <div class="acciones">
                 <a class="enlace-admin" href="relojes.html">Ver la web</a>
-                <button class="boton" id="salir" type="button" hidden>Salir</button>
+                <button class="boton" id="salir" type="button" hidden>
+                    Salir
+                </button>
             </div>
         </div>
     </header>
 
     <main class="contenedor admin">
+
         <h1>Administrar relojes</h1>
 
+        <!-- LOGIN -->
+
         <form class="formulario" id="login">
-            <label>Correo <input type="email" id="correo" required autocomplete="username"></label>
-            <label>Contraseña <input type="password" id="clave" required autocomplete="current-password"></label>
+
+            <label>
+                Correo
+                <input type="email" id="correo" required autocomplete="username">
+            </label>
+
+            <label>
+                Contraseña
+                <input type="password" id="clave" required autocomplete="current-password">
+            </label>
+
             <button class="boton" type="submit">Entrar</button>
+
             <p class="mensaje" id="mensajeLogin" role="alert"></p>
+
         </form>
 
+        <!-- PANEL ADMINISTRADOR -->
+
         <section id="panel" hidden>
+
+            <!-- IMPORTAR GOOGLE DRIVE -->
+
+            <div class="formulario">
+
+                <h2>Importar desde Google Drive</h2>
+
+                <p>
+                    Importa automáticamente las fotografías del catálogo
+                    de Grupo JM.
+                </p>
+
+                <button
+                    class="boton"
+                    id="importarDrive"
+                    type="button"
+                >
+                    Importar desde Google Drive
+                </button>
+                <button class="boton" id="optimizarFotos" type="button">Optimizar fotos ya subidas</button>
+
+                <p
+                    class="mensaje"
+                    id="mensajeDrive"
+                    role="status"
+                    aria-live="polite"
+                    style="white-space: pre-line;"
+                ></p>
+
+            </div>
+
+            <!-- AGREGAR RELOJ -->
+
             <form class="formulario" id="formReloj">
-                <label>Marca
+
+                <h2>Agregar reloj</h2>
+
+                <label>
+                    Marca
+
                     <select id="marca" required>
                         <option value="rolex">Rolex</option>
                         <option value="patek">Patek Philippe</option>
@@ -47,24 +110,68 @@
                         <option value="RichardMille">Richard Mille</option>
                         <option value="Tissot">Tissot</option>
                         <option value="TechnoMarine">TechnoMarine</option>
+                        <option value="Hublot">Hublot</option>
+                        <option value="Oakley">Oakley</option>
+                        <option value="Orient">Orient</option>
+                        <option value="Cubanos">Cubanos</option>
+                        <option value="Parejas">Parejas</option>
+                        <option value="Relojeras">Relojeras</option>
                     </select>
+
                 </label>
-                <label>Nombre <input type="text" id="nombre" required></label>
-                <label>Descripción <textarea id="descripcion" rows="3"></textarea></label>
-                <label>Precio (COP) <input type="number" id="precio" min="0" step="1" ></label>
-                <label>Foto <input type="file" id="foto" accept="image/*" required></label>
-                <label>Modelo <input type="text" id="modelo" required></label>
-                <label>Garantía <input type="text" id="garantia" required></label>
-                <button class="boton" type="submit" id="guardar">Agregar reloj</button>
+
+                <label>
+                    Nombre
+                    <input type="text" id="nombre" required>
+                </label>
+
+                <label>
+                    Descripción
+                    <textarea id="descripcion" rows="3"></textarea>
+                </label>
+
+                <label>
+                    Precio (COP)
+                    <input type="number" id="precio" min="0" step="1">
+                </label>
+
+                <label>
+                    Foto
+                    <input type="file" id="foto" accept="image/*" required>
+                </label>
+
+                <label>
+                    Modelo
+                    <input type="text" id="modelo" required>
+                </label>
+
+                <label>
+                    Garantía
+                    <input type="text" id="garantia" required>
+                </label>
+
+                <button class="boton" type="submit" id="guardar">
+                    Agregar reloj
+                </button>
+
                 <p class="mensaje" id="mensaje" role="status"></p>
+
             </form>
 
+            <!-- LISTA DE RELOJES -->
+
             <h2>Relojes cargados</h2>
+
             <div class="lista-admin" id="lista"></div>
+
         </section>
+
     </main>
 
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <!-- SCRIPTS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
     <script src="config.js"></script>
     <script src="admin.js"></script>
 

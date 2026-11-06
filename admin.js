@@ -453,18 +453,81 @@ if (importarDrive && mensajeDrive) {
                     `Duplicadas omitidas: ${totalOmitidas}.`;
             }
 
-            // 4. IMPORTACIÓN COMPLETADA
+            // ======================================
+// OPTIMIZAR FOTOGRAFÍAS YA SUBIDAS
+// ======================================
 
-            importarDrive.textContent = "Importación completada";
+async function optimizarFotos(escribir) {
+    const { data, error } = await db
+        .from("relojes")
+        .select("id, imagen_url, imagen_ruta");
 
-            mensajeDrive.textContent =
-                `¡Importación finalizada!\n\n` +
-                `Total revisadas: ${total}\n` +
-                `Fotografías nuevas: ${totalProcesadas}\n` +
-                `Duplicadas omitidas: ${totalOmitidas}\n` +
-                `Lotes procesados: ${totalLotes}`;
+    if (error) throw error;
+
+    const pendientes = data.filter(r => r.imagen_url && r.imagen_ruta && !r.imagen_ruta.endsWith(".webp"));
+    let hechas = 0;
+    let fallidas = 0;
+
+    for (const [i, reloj] of pendientes.entries()) {
+        escribir(`Optimizando fotografías: ${i + 1} de ${pendientes.length}...`);
+
+        try {
+            const respuesta = await fetch(reloj.imagen_url);
+            if (!respuesta.ok) throw new Error("No se pudo descargar la foto.");
+
+            const foto = await reducirFoto(await respuesta.blob());
+            const ruta = `${Date.now()}-${reloj.id}.webp`;
+
+            const subida = await db.storage
+                .from("relojes")
+                .upload(ruta, foto, { contentType: "image/webp" });
+            if (subida.error) throw subida.error;
+
+            const { data: publica } = db.storage.from("relojes").getPublicUrl(ruta);
+
+            const cambio = await db
+                .from("relojes")
+                .update({ imagen_url: publica.publicUrl, imagen_ruta: ruta })
+                .eq("id", reloj.id);
+            if (cambio.error) throw cambio.error;
+
+            await db.storage.from("relojes").remove([reloj.imagen_ruta]);
+            hechas++;
+
+        } catch (error) {
+            console.error(`No se pudo optimizar el reloj ${reloj.id}:`, error);
+            fallidas++;
+        }
+    }
+
+    return { total: pendientes.length, hechas, fallidas };
+}
+
+// Botón para optimizar las fotos que ya estaban subidas
+const botonOptimizar = document.getElementById("optimizarFotos");
+
+if (botonOptimizar && mensajeDrive) {
+    botonOptimizar.addEventListener("click", async () => {
+        botonOptimizar.disabled = true;
+
+        try {
+            const r = await optimizarFotos(texto => { mensajeDrive.textContent = texto; });
+
+            mensajeDrive.textContent = r.total === 0
+                ? "Todas las fotografías ya estaban optimizadas."
+                : `Listo. Optimizadas: ${r.hechas} de ${r.total}.` +
+                  (r.fallidas ? `\nNo se pudieron optimizar: ${r.fallidas}. Vuelve a pulsar el botón para reintentar.` : "");
 
             await cargarLista();
+
+        } catch (error) {
+            mensajeDrive.textContent = "No se pudo optimizar: " + error.message;
+
+        } finally {
+            botonOptimizar.disabled = false;
+        }
+    });
+}
 
         } catch (error) {
 
@@ -489,6 +552,81 @@ if (importarDrive && mensajeDrive) {
                 importarDrive.textContent =
                     "Importar desde Google Drive";
             }
+        }
+    });
+}
+// ======================================
+// OPTIMIZAR FOTOGRAFÍAS YA SUBIDAS
+// ======================================
+
+async function optimizarFotos(escribir) {
+    const { data, error } = await db
+        .from("relojes")
+        .select("id, imagen_url, imagen_ruta");
+
+    if (error) throw error;
+
+    const pendientes = data.filter(r => r.imagen_url && r.imagen_ruta && !r.imagen_ruta.endsWith(".webp"));
+    let hechas = 0;
+    let fallidas = 0;
+
+    for (const [i, reloj] of pendientes.entries()) {
+        escribir(`Optimizando fotografías: ${i + 1} de ${pendientes.length}...`);
+
+        try {
+            const respuesta = await fetch(reloj.imagen_url);
+            if (!respuesta.ok) throw new Error("No se pudo descargar la foto.");
+
+            const foto = await reducirFoto(await respuesta.blob());
+            const ruta = `${Date.now()}-${reloj.id}.webp`;
+
+            const subida = await db.storage
+                .from("relojes")
+                .upload(ruta, foto, { contentType: "image/webp" });
+            if (subida.error) throw subida.error;
+
+            const { data: publica } = db.storage.from("relojes").getPublicUrl(ruta);
+
+            const cambio = await db
+                .from("relojes")
+                .update({ imagen_url: publica.publicUrl, imagen_ruta: ruta })
+                .eq("id", reloj.id);
+            if (cambio.error) throw cambio.error;
+
+            await db.storage.from("relojes").remove([reloj.imagen_ruta]);
+            hechas++;
+
+        } catch (error) {
+            console.error(`No se pudo optimizar el reloj ${reloj.id}:`, error);
+            fallidas++;
+        }
+    }
+
+    return { total: pendientes.length, hechas, fallidas };
+}
+
+// Botón para optimizar las fotos que ya estaban subidas
+const botonOptimizar = document.getElementById("optimizarFotos");
+
+if (botonOptimizar && mensajeDrive) {
+    botonOptimizar.addEventListener("click", async () => {
+        botonOptimizar.disabled = true;
+
+        try {
+            const r = await optimizarFotos(texto => { mensajeDrive.textContent = texto; });
+
+            mensajeDrive.textContent = r.total === 0
+                ? "Todas las fotografías ya estaban optimizadas."
+                : `Listo. Optimizadas: ${r.hechas} de ${r.total}.` +
+                  (r.fallidas ? `\nNo se pudieron optimizar: ${r.fallidas}. Vuelve a pulsar el botón para reintentar.` : "");
+
+            await cargarLista();
+
+        } catch (error) {
+            mensajeDrive.textContent = "No se pudo optimizar: " + error.message;
+
+        } finally {
+            botonOptimizar.disabled = false;
         }
     });
 }
