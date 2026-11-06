@@ -97,12 +97,9 @@ const colecciones = {
         nombre: "Orient",
         productos: []  
     },
-    Relojerias: {  
-        nombre: "Relojerías",
-        productos: []
-    },
-    Relojerias: {  
-        nombre: "Relojerías",
+    
+    Parejas: {  
+        nombre: "Parejas",
         productos: []
     },
 };
