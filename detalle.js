@@ -58,7 +58,7 @@
     // Si la tarjeta no trae botón de WhatsApp, el enlace se arma con tu número de script.js
     const enlaceDirecto = titulo => {
         const numero = typeof WHATSAPP === "undefined" ? "" : WHATSAPP;
-        return `https://wa.me/${numero}?text=${encodeURIComponent(`Hola, me interesa el ${titulo}.`)}`;
+        return `https://wa.me/${numero}?text=${encodeURIComponent(`Hola, me interesa el ${titulo} ${descripcion}.`)}`;
     };
 
     // Copia los datos de la tarjeta tocada a la ventana
@@ -66,13 +66,14 @@
         const datos = buscarDatos(tarjeta);
         const texto = selector => (tarjeta.querySelector(selector) || {}).textContent || "";
         const titulo = texto("h3") || texto("h2") || "Reloj";
+        const descripcion = texto(".reloj-info p") || datos.descripcion || "Sin descripción";   
         const img = tarjeta.querySelector("img");
         const enlace = tarjeta.querySelector("a[href*='wa.me']");
 
         foto.src = img ? img.src : "";
         foto.alt = titulo;
         nombre.textContent = titulo;
-        dDescripcion.textContent = texto(".reloj-info p") || datos.descripcion || "Sin descripción";
+        dDescripcion.textContent = descripcion;
         dModelo.textContent = datos.modelo || "No especificado";
         dGarantia.textContent = datos.garantia || "No especificada";
         precio.textContent = texto(".precio");
