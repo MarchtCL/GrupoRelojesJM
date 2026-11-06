@@ -80,7 +80,31 @@ const colecciones = {
     TechnoMarine: {
         nombre: "TechnoMarine",
         productos: []
-    }
+    },
+    Hublot: {
+        nombre: "Hublot",
+        productos: []
+    },
+    Cubanos: {
+        nombre: "Cubanos",
+        productos: []
+    },
+    Oakley: {
+        nombre: "Oakley",
+        productos: []
+    },
+    Orient: {
+        nombre: "Orient",
+        productos: []  
+    },
+    Relojerias: {  
+        nombre: "Relojerías",
+        productos: []
+    },
+    Relojerias: {  
+        nombre: "Relojerías",
+        productos: []
+    },
 };
 
 // ======================================
