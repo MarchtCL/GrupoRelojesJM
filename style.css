@@ -961,28 +961,31 @@ body:has(dialog[open]) { overflow: hidden; }
 .encabezado .barra { isolation: isolate; }
 
 /* =========================================
-   GRUPO JM — COLECCIONES COMPACTAS
-   Página principal
+   GRUPO JM — COLECCIONES EN FILA
+   Una al lado de la otra; las nuevas se acomodan solas
 ========================================= */
 
 .colecciones {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
 }
 
 /* Tarjeta */
 .coleccion {
-    max-width: 260px;
-    margin-inline: auto;
-    width: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: top;
+    width: 220px;
+    max-width: none;
+    margin: 0 18px 18px 0;
     border-radius: 5px;
 }
 
 /* Imagen */
 .coleccion img {
     width: 100%;
-    height: 145px;
+    height: 150px;
     aspect-ratio: auto;
     object-fit: contain;
     padding: 12px;
@@ -1001,15 +1004,11 @@ body:has(dialog[open]) { overflow: hidden; }
     line-height: 1.4;
 }
 
-/* Celulares */
+/* Celulares: dos por fila */
 @media (max-width: 600px) {
-    .colecciones {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-    }
-
     .coleccion {
-        max-width: none;
+        width: calc(50% - 14px);
+        margin: 0 12px 12px 0;
     }
 
     .coleccion img {
@@ -1026,4 +1025,24 @@ body:has(dialog[open]) { overflow: hidden; }
         padding: 5px 10px 12px;
         font-size: 0.75rem;
     }
+}
+/* Tarjeta que todavía no está disponible */
+.coleccion.inactiva {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.coleccion.inactiva:hover {
+    border-color: var(--dorado-oscuro);
+    transform: none;
+}
+/* Administrar: oculto en la barra de arriba, solo sale en el menú de las 3 líneas */
+.menu .enlace-admin {
+    display: none;
+}
+
+/* Cómo se ve dentro del menú de las 3 líneas */
+.panel-menu .enlace-admin {
+    border: 0;
+    border-radius: 0;
 }
