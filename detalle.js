@@ -42,7 +42,7 @@
     const precio = ventana.querySelector(".detalle-precio");
     const whatsapp = ventana.querySelector(".detalle-whatsapp");
 
-    // Busca el reloj en la lista de script.js (por su foto) para sacar modelo y garantía
+    // Busca el reloj en la lista de script.js (por su foto) por si falta algún dato en la tarjeta
     function buscarDatos(tarjeta) {
         const img = tarjeta.querySelector("img");
         if (!img || typeof colecciones === "undefined") return {};
@@ -55,33 +55,43 @@
         return {};
     }
 
-    // Si la tarjeta no trae botón de WhatsApp, el enlace se arma con tu número de script.js
-    const enlaceDirecto = titulo => {
+    // Textos que NO se mandan por WhatsApp porque no son una descripción real
+    const SIN_DESCRIPCION = ["Sin descripción", "Consulta más información por WhatsApp."];
+
+    // Mensaje: "Hola, me interesa el [nombre]. [descripción]. ¿Me puedes dar más información?"
+    // (antes aquí faltaba pasar la descripción y por eso la ventana no se abría)
+    function enlaceDirecto(titulo, descripcion) {
         const numero = typeof WHATSAPP === "undefined" ? "" : WHATSAPP;
-        return `https://wa.me/${numero}?text=${encodeURIComponent(`Hola, me interesa el ${titulo} ${descripcion}.`)}`;
-    };
+        const original = (descripcion || "").trim();
+        const limpia = original.replace(/[.!?\s]+$/, "");
+
+        const partes = [`Hola, me interesa el ${titulo}.`];
+        if (limpia && !SIN_DESCRIPCION.includes(original)) partes.push(`${limpia}.`);
+        partes.push("¿Me puedes dar más información?");
+
+        return `https://wa.me/${numero}?text=${encodeURIComponent(partes.join(" "))}`;
+    }
 
     // Copia los datos de la tarjeta tocada a la ventana
     function abrir(tarjeta) {
         const datos = buscarDatos(tarjeta);
-        const texto = selector => (tarjeta.querySelector(selector) || {}).textContent || "";
+        const texto = selector => ((tarjeta.querySelector(selector) || {}).textContent || "").trim();
         const titulo = texto("h3") || texto("h2") || "Reloj";
-        const descripcion = texto(".reloj-info p") || datos.descripcion || "Sin descripción";   
+        const descripcion = texto(".reloj-info p") || datos.descripcion || "Sin descripción";
         const img = tarjeta.querySelector("img");
-        const enlace = tarjeta.querySelector("a[href*='wa.me']");
 
         foto.src = img ? img.src : "";
         foto.alt = titulo;
         nombre.textContent = titulo;
         dDescripcion.textContent = descripcion;
-        dModelo.textContent = datos.modelo || "No especificado";
-        dGarantia.textContent = datos.garantia || "No especificada";
+        dModelo.textContent = texto(".modelo") || datos.modelo || "No especificado";
+        dGarantia.textContent = texto(".garantia") || datos.garantia || "No especificada";
         precio.textContent = texto(".precio");
-        whatsapp.href = enlace ? enlace.href : enlaceDirecto(titulo);
+        whatsapp.href = enlaceDirecto(titulo, descripcion);
         ventana.showModal();
     }
 
-    // Tocar la tarjeta (menos su botón de WhatsApp) abre el detalle
+    // Tocar la tarjeta abre el detalle
     lista.addEventListener("click", evento => {
         if (evento.target.closest("a")) return;
         const tarjeta = evento.target.closest(".reloj");

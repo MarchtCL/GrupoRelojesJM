@@ -1046,3 +1046,73 @@ body:has(dialog[open]) { overflow: hidden; }
     border: 0;
     border-radius: 0;
 }
+
+
+/* =========================================
+   Grupo JM — BARRA DE DESPLAZAMIENTO (SCROLL)
+   Surco vino con perilla dorada. Se ve en la página principal,
+   en la de relojes, en el panel admin y en la ventana de detalles.
+========================================= */
+
+/* Chrome, Edge, Safari y Opera */
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+/* El carril: un surco oscuro con luz vino en el centro y filo dorado */
+::-webkit-scrollbar-track {
+    background: linear-gradient(90deg, #0A0707 0%, rgba(110, 31, 42, 0.55) 50%, #0A0707 100%);
+    border-left: 1px solid var(--dorado-oscuro);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.85);
+}
+
+/* La perilla: dorado brillante con borde para que parezca un riel */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--dorado-oscuro) 0%, #FFF1B8 38%, var(--dorado) 62%, var(--dorado-oscuro) 100%);
+    border: 3px solid #0E0A0A;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(255, 241, 184, 0.45);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #A8782E 0%, #FFF8D6 38%, var(--dorado-vivo) 62%, #A8782E 100%);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(90deg, var(--vino) 0%, var(--dorado-vivo) 45%, var(--vino) 100%);
+}
+
+/* Si el scroll es horizontal, los degradados se giran */
+::-webkit-scrollbar-track:horizontal {
+    background: linear-gradient(180deg, #0A0707 0%, rgba(110, 31, 42, 0.55) 50%, #0A0707 100%);
+    border-left: 0;
+    border-top: 1px solid var(--dorado-oscuro);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(180deg, var(--dorado-oscuro) 0%, #FFF1B8 38%, var(--dorado) 62%, var(--dorado-oscuro) 100%);
+}
+
+/* Sin flechitas y con la esquina del mismo color */
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+::-webkit-scrollbar-corner { background: #0A0707; }
+
+/* Ventana de detalles: la barra es más fina y encaja con el marco dorado */
+.detalle-caja::-webkit-scrollbar { width: 10px; }
+
+.detalle-caja::-webkit-scrollbar-track {
+    background: rgba(10, 7, 7, 0.6);
+    border-left: 1px solid rgba(140, 100, 37, 0.5);
+    box-shadow: none;
+}
+
+.detalle-caja::-webkit-scrollbar-thumb { border-width: 2px; }
+
+/* Firefox (no entiende ::-webkit-scrollbar, así que usa esto) */
+@supports not selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--dorado) #1E1514;
+    }
+}

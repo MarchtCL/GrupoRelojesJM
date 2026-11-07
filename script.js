@@ -1,4 +1,3 @@
-
 // ======================================
 // Grupo JM — CATÁLOGO DE RELOJES
 // ======================================
@@ -125,10 +124,15 @@ function escaparHTML(texto) {
     })[caracter]);
 }
 
+// Mensaje: "Hola, me interesa el [nombre]. [descripción]. ¿Me puedes dar más información?"
 function enlaceWhatsApp(reloj) {
-    const mensaje = `Hola, me interesa el ${reloj.nombre}. ${reloj.descripcion}. ¿Me pueden dar más información?`;
+    const descripcion = String(reloj.descripcion ?? "").trim().replace(/[.!?\s]+$/, "");
 
-    return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+    const partes = [`Hola, me interesa el ${reloj.nombre}.`];
+    if (descripcion) partes.push(`${descripcion}.`);
+    partes.push("¿Me puedes dar más información?");
+
+    return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(partes.join(" "))}`;
 }
 
 // ======================================
