@@ -340,9 +340,12 @@ if (botonMenu && panelMenu) {
 }
 
 // ======================================
-// ENLACES DE WHATSAPP
+// ENLACES DE WHATSAPP (botón de contacto de index)
+// Si el botón tiene data-mensaje, lo envía como texto del chat
 // ======================================
 
 document.querySelectorAll("[data-whatsapp]").forEach(enlace => {
-    enlace.href = `https://wa.me/${WHATSAPP}`;
+    const mensaje = enlace.dataset.mensaje;
+    enlace.href = `https://wa.me/${WHATSAPP}` +
+        (mensaje ? `?text=${encodeURIComponent(mensaje)}` : "");
 });

@@ -1051,7 +1051,7 @@ body:has(dialog[open]) { overflow: hidden; }
 /* =========================================
    Grupo JM — BARRA DE DESPLAZAMIENTO (SCROLL)
    Surco vino con perilla dorada. Se ve en la página principal,
-   en la de relojes, en el panel admin y en la ventana de detalles.
+   en la de relojes y en el panel admin.
 ========================================= */
 
 /* Chrome, Edge, Safari y Opera */
@@ -1098,21 +1098,138 @@ body:has(dialog[open]) { overflow: hidden; }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 ::-webkit-scrollbar-corner { background: #0A0707; }
 
-/* Ventana de detalles: la barra es más fina y encaja con el marco dorado */
-.detalle-caja::-webkit-scrollbar { width: 10px; }
-
-.detalle-caja::-webkit-scrollbar-track {
-    background: rgba(10, 7, 7, 0.6);
-    border-left: 1px solid rgba(140, 100, 37, 0.5);
-    box-shadow: none;
-}
-
-.detalle-caja::-webkit-scrollbar-thumb { border-width: 2px; }
-
 /* Firefox (no entiende ::-webkit-scrollbar, así que usa esto) */
 @supports not selector(::-webkit-scrollbar) {
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--dorado) #1E1514;
+    }
+}
+
+
+/* =========================================
+   Grupo JM — VENTANA DE DETALLES SIN BARRA DE SCROLL
+   Se puede desplazar, pero la barra no se ve
+   (va al final para que gane sobre las reglas anteriores)
+========================================= */
+
+.detalle-caja {
+    scrollbar-width: none;      /* Firefox y Chrome nuevos */
+    -ms-overflow-style: none;   /* Edge antiguo */
+}
+
+.detalle-caja::-webkit-scrollbar {
+    display: none;              /* Chrome, Edge y Safari */
+}
+
+
+/* =========================================
+   Grupo JM — BOTÓN EDITAR (PANEL ADMIN)
+   Editar y Eliminar juntos, y formulario de edición dentro de la fila
+========================================= */
+
+/* Editar y Eliminar, uno al lado del otro */
+.admin .fila-admin .fila-botones {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botón Editar (dorado) */
+.admin .fila-admin .btn-editar {
+    color: var(--dorado-vivo);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro);
+}
+
+.admin .fila-admin .btn-editar:hover {
+    color: var(--negro);
+    background: var(--dorado);
+    border-color: var(--dorado);
+}
+
+/* La fila en modo edición ocupa todo el ancho */
+.admin .fila-admin.editando {
+    display: block;
+    padding: 22px;
+}
+
+.admin .fila-admin.editando:hover {
+    transform: none;
+}
+
+/* Formulario de edición: sin caja extra, ya está dentro de la fila */
+.admin .fila-admin .fila-edicion {
+    gap: 16px;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.admin .fila-admin .fila-edicion .campo-ancho {
+    grid-column: 1 / -1;
+}
+
+/* Botones Guardar y Cancelar */
+.admin .fila-admin .fila-edicion-botones {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin .fila-admin .btn-guardar {
+    padding: 11px 26px;
+    color: var(--negro);
+    background: linear-gradient(135deg, var(--dorado-vivo), var(--dorado-oscuro));
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.admin .fila-admin .btn-guardar:hover {
+    color: var(--negro);
+    background: linear-gradient(135deg, var(--dorado-vivo), var(--dorado-oscuro));
+    border-color: transparent;
+    box-shadow: 0 8px 22px rgba(212, 175, 55, 0.3);
+}
+
+.admin .fila-admin .btn-cancelar {
+    padding: 11px 22px;
+    color: var(--dorado-vivo);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro);
+    cursor: pointer;
+}
+
+.admin .fila-admin .btn-cancelar:hover {
+    color: var(--negro);
+    background: var(--dorado);
+    border-color: var(--dorado);
+}
+
+.admin .fila-admin .btn-editar,
+.admin .fila-admin .btn-guardar,
+.admin .fila-admin .btn-cancelar {
+    cursor: pointer;
+}
+
+.admin .fila-admin button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* Celulares: Editar y Eliminar ocupan todo el ancho, mitad y mitad */
+@media (max-width: 600px) {
+    .admin .fila-admin .fila-botones {
+        grid-column: 1 / -1;
+    }
+
+    .admin .fila-admin .fila-botones button,
+    .admin .fila-admin .fila-edicion-botones button {
+        flex: 1;
+        width: auto;
     }
 }

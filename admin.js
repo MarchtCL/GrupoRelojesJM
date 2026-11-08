@@ -1,4 +1,3 @@
-
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const login = document.getElementById("login");
@@ -20,6 +19,132 @@ const formatoPrecio = precio =>
         currency: "COP",
         maximumFractionDigits: 0
     });
+
+// ======================================
+// ESTILOS DEL BOTÓN EDITAR
+// Van aquí dentro para que funcionen aunque style.css no los tenga
+// ======================================
+
+const estiloEdicion = document.createElement("style");
+
+estiloEdicion.textContent = `
+/* Editar y Eliminar, uno al lado del otro */
+.admin .fila-admin .fila-botones {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin .fila-admin .fila-botones button {
+    margin: 0;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin .fila-admin .fila-botones .btn-editar {
+    color: var(--dorado-vivo, #F0C44D);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro, #8C6425);
+}
+
+.admin .fila-admin .fila-botones .btn-editar:hover {
+    color: var(--negro, #0E0A0A);
+    background: var(--dorado, #D4AF37);
+    border-color: var(--dorado, #D4AF37);
+}
+
+/* Formulario de edición: reemplaza toda la fila del reloj */
+.admin .lista-admin > .fila-edicion {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 22px;
+}
+
+.admin .fila-edicion .campo-ancho {
+    grid-column: 1 / -1;
+}
+
+.admin .fila-edicion .fila-edicion-titulo {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.admin .fila-edicion .mensaje {
+    align-self: center;
+}
+
+.admin .fila-edicion .fila-edicion-botones {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin .fila-edicion .fila-edicion-botones button {
+    margin: 0;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin .fila-edicion .fila-edicion-botones .btn-guardar {
+    padding: 12px 28px;
+    color: var(--negro, #0E0A0A);
+    background: linear-gradient(135deg, var(--dorado-vivo, #F0C44D), var(--dorado-oscuro, #8C6425));
+    border: 0;
+}
+
+.admin .fila-edicion .fila-edicion-botones .btn-guardar:hover {
+    color: var(--negro, #0E0A0A);
+    background: linear-gradient(135deg, var(--dorado-vivo, #F0C44D), var(--dorado-oscuro, #8C6425));
+    box-shadow: 0 8px 22px rgba(212, 175, 55, 0.3);
+}
+
+.admin .fila-edicion .fila-edicion-botones .btn-cancelar {
+    padding: 12px 24px;
+    color: var(--dorado-vivo, #F0C44D);
+    background: transparent;
+    border: 1px solid var(--dorado-oscuro, #8C6425);
+}
+
+.admin .fila-edicion .fila-edicion-botones .btn-cancelar:hover {
+    color: var(--negro, #0E0A0A);
+    background: var(--dorado, #D4AF37);
+    border-color: var(--dorado, #D4AF37);
+}
+
+.admin .fila-edicion button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* Celulares */
+@media (max-width: 650px) {
+    .admin .lista-admin > .fila-edicion {
+        grid-template-columns: 1fr;
+        padding: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin .fila-admin .fila-botones {
+        grid-column: 1 / -1;
+    }
+
+    .admin .fila-admin .fila-botones button,
+    .admin .fila-edicion .fila-edicion-botones button {
+        flex: 1;
+        width: auto;
+    }
+}
+`;
+
+document.head.append(estiloEdicion);
 
 // ======================================
 // MOSTRAR LOGIN O PANEL
@@ -233,6 +358,7 @@ async function cargarLista() {
 
 // ======================================
 // CREAR FILA DE CADA RELOJ
+// (foto, datos y botones Editar / Eliminar)
 // ======================================
 
 function crearFila(reloj) {
@@ -255,15 +381,183 @@ function crearFila(reloj) {
 
     info.append(nombre, detalle);
 
+    // Botones: Editar y Eliminar, uno al lado del otro
+    const botones = document.createElement("div");
+    botones.className = "fila-botones";
+
+    const editar = document.createElement("button");
+    editar.type = "button";
+    editar.className = "btn-editar";
+    editar.textContent = "Editar";
+
+    editar.addEventListener("click", () => editarFila(fila, reloj));
+
     const borrar = document.createElement("button");
     borrar.type = "button";
     borrar.textContent = "Eliminar";
 
     borrar.addEventListener("click", () => eliminar(reloj));
 
-    fila.append(img, info, borrar);
+    botones.append(editar, borrar);
+
+    fila.append(img, info, botones);
 
     return fila;
+}
+
+// ======================================
+// EDITAR RELOJ
+// El formulario reemplaza TODA la fila del reloj
+// ======================================
+
+function editarFila(fila, reloj) {
+    const form = document.createElement("form");
+    form.className = "formulario fila-edicion";
+
+    // Título del formulario
+    const titulo = document.createElement("h3");
+    titulo.className = "fila-edicion-titulo campo-ancho";
+    titulo.textContent = "Editando: " + reloj.nombre;
+
+    // Crea una etiqueta con su campo (ancho = ocupa las dos columnas)
+    const campo = (texto, control, ancho = false) => {
+        const etiqueta = document.createElement("label");
+        etiqueta.append(texto, control);
+        if (ancho) etiqueta.classList.add("campo-ancho");
+        return etiqueta;
+    };
+
+    // Nombre
+    const nombre = document.createElement("input");
+    nombre.type = "text";
+    nombre.required = true;
+    nombre.value = reloj.nombre || "";
+
+    // Marca (copia las mismas opciones del formulario "Agregar reloj")
+    const marca = document.createElement("select");
+    marca.required = true;
+
+    document.querySelectorAll("#marca option").forEach(opcion => {
+        marca.append(opcion.cloneNode(true));
+    });
+
+    marca.value = reloj.marca;
+
+    // Si la marca del reloj no está en la lista, se agrega para no perderla
+    if (marca.value !== reloj.marca) {
+        marca.append(new Option(reloj.marca, reloj.marca));
+        marca.value = reloj.marca;
+    }
+
+    // Descripción
+    const descripcion = document.createElement("textarea");
+    descripcion.rows = 3;
+    descripcion.value = reloj.descripcion || "";
+
+    // Modelo
+    const modelo = document.createElement("input");
+    modelo.type = "text";
+    modelo.value = reloj.modelo || "";
+
+    // Garantía
+    const garantia = document.createElement("input");
+    garantia.type = "text";
+    garantia.value = reloj.garantia || "";
+
+    // Precio
+    const precio = document.createElement("input");
+    precio.type = "number";
+    precio.min = "0";
+    precio.step = "1";
+    precio.value = reloj.precio ?? "";
+
+    // Mensaje de estado
+    const aviso = document.createElement("p");
+    aviso.className = "mensaje campo-ancho";
+    aviso.setAttribute("role", "status");
+
+    // Botones Guardar y Cancelar
+    const acciones = document.createElement("div");
+    acciones.className = "fila-edicion-botones";
+
+    const guardar = document.createElement("button");
+    guardar.type = "submit";
+    guardar.className = "btn-guardar";
+    guardar.textContent = "Guardar cambios";
+
+    const cancelar = document.createElement("button");
+    cancelar.type = "button";
+    cancelar.className = "btn-cancelar";
+    cancelar.textContent = "Cancelar";
+
+    // Cancelar: vuelve a mostrar la fila normal sin cambios
+    cancelar.addEventListener("click", () => {
+        form.replaceWith(crearFila(reloj));
+    });
+
+    acciones.append(guardar, cancelar);
+
+    form.append(
+        titulo,
+        campo("Nombre", nombre),
+        campo("Marca", marca),
+        campo("Descripción", descripcion, true),
+        campo("Modelo", modelo),
+        campo("Garantía", garantia),
+        campo("Precio (COP)", precio),
+        aviso,
+        acciones
+    );
+
+    // Guardar los cambios en Supabase
+    form.addEventListener("submit", async evento => {
+        evento.preventDefault();
+
+        guardar.disabled = true;
+        cancelar.disabled = true;
+        aviso.textContent = "Guardando cambios...";
+
+        const textoPrecio = precio.value.trim();
+
+        const cambios = {
+            marca: marca.value,
+            nombre: nombre.value.trim(),
+            descripcion: descripcion.value.trim() || null,
+            modelo: modelo.value.trim() || null,
+            garantia: garantia.value.trim() || null,
+            precio: textoPrecio === "" ? null : Number(textoPrecio)
+        };
+
+        try {
+            const { data, error } = await db
+                .from("relojes")
+                .update(cambios)
+                .eq("id", reloj.id)
+                .select()
+                .single();
+
+            if (error) {
+                aviso.textContent = error.code === "PGRST116"
+                    ? "No se actualizó ningún reloj. Vuelve a iniciar sesión e inténtalo de nuevo."
+                    : "No se pudo guardar: " + error.message;
+
+                guardar.disabled = false;
+                cancelar.disabled = false;
+                return;
+            }
+
+            // Vuelve a mostrar la fila normal con los datos nuevos
+            form.replaceWith(crearFila(data));
+
+        } catch (error) {
+            aviso.textContent = "Error de conexión: " + error.message;
+            guardar.disabled = false;
+            cancelar.disabled = false;
+        }
+    });
+
+    fila.replaceWith(form);
+    nombre.focus();
 }
 
 // ======================================
@@ -453,82 +747,6 @@ if (importarDrive && mensajeDrive) {
                     `Duplicadas omitidas: ${totalOmitidas}.`;
             }
 
-            // ======================================
-// OPTIMIZAR FOTOGRAFÍAS YA SUBIDAS
-// ======================================
-
-async function optimizarFotos(escribir) {
-    const { data, error } = await db
-        .from("relojes")
-        .select("id, imagen_url, imagen_ruta");
-
-    if (error) throw error;
-
-    const pendientes = data.filter(r => r.imagen_url && r.imagen_ruta && !r.imagen_ruta.endsWith(".webp"));
-    let hechas = 0;
-    let fallidas = 0;
-
-    for (const [i, reloj] of pendientes.entries()) {
-        escribir(`Optimizando fotografías: ${i + 1} de ${pendientes.length}...`);
-
-        try {
-            const respuesta = await fetch(reloj.imagen_url);
-            if (!respuesta.ok) throw new Error("No se pudo descargar la foto.");
-
-            const foto = await reducirFoto(await respuesta.blob());
-            const ruta = `${Date.now()}-${reloj.id}.webp`;
-
-            const subida = await db.storage
-                .from("relojes")
-                .upload(ruta, foto, { contentType: "image/webp" });
-            if (subida.error) throw subida.error;
-
-            const { data: publica } = db.storage.from("relojes").getPublicUrl(ruta);
-
-            const cambio = await db
-                .from("relojes")
-                .update({ imagen_url: publica.publicUrl, imagen_ruta: ruta })
-                .eq("id", reloj.id);
-            if (cambio.error) throw cambio.error;
-
-            await db.storage.from("relojes").remove([reloj.imagen_ruta]);
-            hechas++;
-
-        } catch (error) {
-            console.error(`No se pudo optimizar el reloj ${reloj.id}:`, error);
-            fallidas++;
-        }
-    }
-
-    return { total: pendientes.length, hechas, fallidas };
-}
-
-// Botón para optimizar las fotos que ya estaban subidas
-const botonOptimizar = document.getElementById("optimizarFotos");
-
-if (botonOptimizar && mensajeDrive) {
-    botonOptimizar.addEventListener("click", async () => {
-        botonOptimizar.disabled = true;
-
-        try {
-            const r = await optimizarFotos(texto => { mensajeDrive.textContent = texto; });
-
-            mensajeDrive.textContent = r.total === 0
-                ? "Todas las fotografías ya estaban optimizadas."
-                : `Listo. Optimizadas: ${r.hechas} de ${r.total}.` +
-                  (r.fallidas ? `\nNo se pudieron optimizar: ${r.fallidas}. Vuelve a pulsar el botón para reintentar.` : "");
-
-            await cargarLista();
-
-        } catch (error) {
-            mensajeDrive.textContent = "No se pudo optimizar: " + error.message;
-
-        } finally {
-            botonOptimizar.disabled = false;
-        }
-    });
-}
-
         } catch (error) {
 
             mensajeDrive.textContent =
@@ -555,6 +773,7 @@ if (botonOptimizar && mensajeDrive) {
         }
     });
 }
+
 // ======================================
 // OPTIMIZAR FOTOGRAFÍAS YA SUBIDAS
 // ======================================
