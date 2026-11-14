@@ -99,6 +99,10 @@ const colecciones = {
         nombre: "Parejas",
         productos: []
     },
+    Guess: {
+        nombre: "Guess",
+        productos: []
+    }
 };
 
 // Lista global de todos los relojes, del más nuevo al más viejo
