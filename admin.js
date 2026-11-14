@@ -270,6 +270,82 @@ salir.addEventListener("click", async () => {
 });
 
 // ======================================
+// DETECTAR RELOJES REPETIDOS
+// (misma marca + modelo + descripción)
+// ======================================
+
+function normalizar(texto) {
+    return String(texto ?? "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+async function relojYaExiste(marca, modelo, descripcion, idExcluido = null) {
+    const modeloNuevo = normalizar(modelo);
+    const descripcionNueva = normalizar(descripcion);
+
+    // Supabase entrega máximo 1000 filas por consulta, por eso se lee por páginas
+    const TAMANO_PAGINA = 1000;
+    let desde = 0;
+
+    while (true) {
+        let consulta = db
+            .from("relojes")
+            .select("id, modelo, descripcion")
+            .eq("marca", marca)
+            .order("id", { ascending: true })
+            .range(desde, desde + TAMANO_PAGINA - 1);
+
+        if (idExcluido !== null) consulta = consulta.neq("id", idExcluido);
+
+        const { data, error } = await consulta;
+
+        if (error) throw error;
+
+        const repetido = data.some(r =>
+            normalizar(r.modelo) === modeloNuevo &&
+            normalizar(r.descripcion) === descripcionNueva
+        );
+
+        if (repetido) return true;
+
+        if (data.length < TAMANO_PAGINA) return false;
+
+        desde += TAMANO_PAGINA;
+    }
+}
+
+// ======================================
+// DETECTAR FOTO REPETIDA
+// (misma fotografía = mismo reloj)
+// ======================================
+
+// Huella única de la fotografía original (SHA-256)
+async function huellaFoto(archivo) {
+    if (!archivo || !window.crypto || !crypto.subtle) return null;
+
+    const bytes = await archivo.arrayBuffer();
+    const resumen = await crypto.subtle.digest("SHA-256", bytes);
+
+    return Array.from(new Uint8Array(resumen))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+// Devuelve el reloj que ya tiene esa foto, o null si no existe
+async function fotoYaExiste(huella) {
+    if (!huella) return null;
+
+    const { data, error } = await db
+        .from("relojes")
+        .select("id, nombre")
+        .eq("foto_hash", huella)
+        .limit(1);
+
+    if (error) throw error;
+
+    return data.length > 0 ? data[0] : null;
+}
+
+// ======================================
 // AGREGAR RELOJ
 // ======================================
 
@@ -279,10 +355,35 @@ formReloj.addEventListener("submit", async evento => {
     const boton = document.getElementById("guardar");
 
     boton.disabled = true;
-    mensaje.textContent = "Subiendo fotografía...";
+    mensaje.textContent = "Revisando si el reloj ya existe...";
 
     try {
+        const repetido = await relojYaExiste(
+            document.getElementById("marca").value,
+            document.getElementById("modelo").value,
+            document.getElementById("descripcion").value
+        );
+
+        if (repetido) {
+            mensaje.textContent =
+                "⚠️ Este reloj ya está en la página (repetido). No se subió.";
+            return; // el finally vuelve a activar el botón
+        }
+
         const archivo = document.getElementById("foto").files[0];
+
+        // Revisar si esta misma fotografía ya fue subida
+        const huella = await huellaFoto(archivo);
+        const fotoRepetida = await fotoYaExiste(huella);
+
+        if (fotoRepetida) {
+            mensaje.textContent =
+                `⚠️ Esta foto ya está en la página (reloj: "${fotoRepetida.nombre}"). No se subió.`;
+            return;
+        }
+
+        mensaje.textContent = "Subiendo fotografía...";
+
         const foto = await reducirFoto(archivo);
 
         const ruta = `${Date.now()}.webp`;
@@ -307,10 +408,22 @@ formReloj.addEventListener("submit", async evento => {
             modelo: document.getElementById("modelo").value.trim(),
             garantia: document.getElementById("garantia").value.trim(),
             imagen_url: data.publicUrl,
-            imagen_ruta: ruta
+            imagen_ruta: ruta,
+            foto_hash: huella
         });
 
-        if (guardado.error) throw guardado.error;
+        if (guardado.error) {
+            // Si Supabase rechaza un duplicado (índice único), se borra la foto recién subida
+            await db.storage.from("relojes").remove([ruta]);
+
+            if (guardado.error.code === "23505") {
+                mensaje.textContent =
+                    "⚠️ Este reloj ya está en la página (repetido). No se subió.";
+                return;
+            }
+
+            throw guardado.error;
+        }
 
         formReloj.reset();
 
@@ -529,6 +642,24 @@ function editarFila(fila, reloj) {
         };
 
         try {
+            // Revisar que no quede igual a otro reloj (se excluye a sí mismo)
+            if (cambios.modelo) {
+                const repetido = await relojYaExiste(
+                    cambios.marca,
+                    cambios.modelo,
+                    cambios.descripcion,
+                    reloj.id
+                );
+
+                if (repetido) {
+                    aviso.textContent =
+                        "⚠️ Ya existe otro reloj igual (repetido). No se guardaron los cambios.";
+                    guardar.disabled = false;
+                    cancelar.disabled = false;
+                    return;
+                }
+            }
+
             const { data, error } = await db
                 .from("relojes")
                 .update(cambios)
@@ -539,7 +670,9 @@ function editarFila(fila, reloj) {
             if (error) {
                 aviso.textContent = error.code === "PGRST116"
                     ? "No se actualizó ningún reloj. Vuelve a iniciar sesión e inténtalo de nuevo."
-                    : "No se pudo guardar: " + error.message;
+                    : error.code === "23505"
+                        ? "⚠️ Ya existe otro reloj igual (repetido). No se guardaron los cambios."
+                        : "No se pudo guardar: " + error.message;
 
                 guardar.disabled = false;
                 cancelar.disabled = false;
