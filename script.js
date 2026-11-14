@@ -22,28 +22,22 @@ if (
 const colecciones = {
     rolex: {
         nombre: "Rolex",
-        productos: [
-        ]
+        productos: []
     },
 
     patek: {
         nombre: "Patek Philippe",
-        productos: [
-          
-        ]
+        productos: []
     },
 
     casio: {
         nombre: "Casio",
-        productos: [
-
-        ]
+        productos: []
     },
 
     ofertas: {
         nombre: "Ofertas",
-        productos: [
-        ]
+        productos: []
     },
 
     AP: {
@@ -80,28 +74,36 @@ const colecciones = {
         nombre: "TechnoMarine",
         productos: []
     },
+
     Hublot: {
         nombre: "Hublot",
         productos: []
     },
+
     Cubanos: {
         nombre: "Cubanos",
         productos: []
     },
+
     Oakley: {
         nombre: "Oakley",
         productos: []
     },
+
     Orient: {
         nombre: "Orient",
-        productos: []  
+        productos: []
     },
-    
-    Parejas: {  
+
+    Parejas: {
         nombre: "Parejas",
         productos: []
     },
 };
+
+// Lista global de todos los relojes, del más nuevo al más viejo
+// (se usa en la vista "Todos")
+const relojesRecientes = [];
 
 // ======================================
 // ELEMENTOS DEL CATÁLOGO
@@ -202,15 +204,12 @@ function crearFiltros() {
 // ======================================
 
 function mostrar(clave) {
-    const claves = clave === "todos"
-        ? Object.keys(colecciones)
-        : [clave];
+    const items = clave === "todos"
+        ? relojesRecientes
+        : (colecciones[clave]?.productos ?? []).map(reloj => ({ reloj, clave }));
 
-    catalogo.innerHTML = claves
-        .filter(k => colecciones[k])
-        .flatMap(k =>
-            colecciones[k].productos.map(reloj => tarjeta(reloj, k))
-        )
+    catalogo.innerHTML = items
+        .map(({ reloj, clave }) => tarjeta(reloj, clave))
         .join("");
 
     filtros.querySelectorAll("button").forEach(boton => {
@@ -238,10 +237,12 @@ async function cargarRelojesSupabase() {
     }
 
     try {
+        // Los más nuevos llegan primero
         const { data, error } = await db
             .from("relojes")
             .select("marca, nombre, descripcion, modelo, garantia, precio, imagen_url, created_at")
-            .order("created_at", { ascending: false });
+            .order("created_at", { ascending: false })
+            .order("id", { ascending: false });
 
         if (error) throw error;
 
@@ -250,14 +251,18 @@ async function cargarRelojesSupabase() {
 
             if (!colecciones[clave] || !reloj.imagen_url) return;
 
-            colecciones[clave].productos.unshift({
+            const producto = {
                 imagen: reloj.imagen_url,
                 nombre: reloj.nombre,
                 descripcion: reloj.descripcion || "Consulta más información por WhatsApp.",
                 modelo: reloj.modelo,
                 garantia: reloj.garantia,
                 precio: reloj.precio
-            });
+            };
+
+            // push (no unshift): respeta el orden que ya trae Supabase
+            colecciones[clave].productos.push(producto);
+            relojesRecientes.push({ reloj: producto, clave });
         });
 
         return true;
