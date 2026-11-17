@@ -1233,3 +1233,627 @@ body:has(dialog[open]) { overflow: hidden; }
         width: auto;
     }
 }
+/* =========================================
+   GRUPO JM — CATÁLOGO DE RELOJES REDISEÑADO
+   Estilos exclusivos de relojes.html
+========================================= */
+
+.pagina-relojes {
+    min-height: 100vh;
+    overflow-x: clip;
+    background:
+        radial-gradient(ellipse at 50% 24%, rgba(110, 31, 42, .20), transparent 55%),
+        var(--negro);
+}
+
+/* HERO */
+
+.pagina-relojes .hero-relojes {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: 290px;
+    padding: clamp(42px, 6vw, 72px) max(5%, calc((100% - 1180px) / 2));
+    overflow: hidden;
+    border-bottom: 1px solid var(--dorado-oscuro);
+    background:
+        linear-gradient(90deg, rgba(8, 6, 6, .98) 0%, rgba(15, 8, 8, .88) 48%, rgba(15, 8, 8, .25) 100%),
+        radial-gradient(ellipse at 78% 45%, rgba(110, 31, 42, .6), transparent 48%),
+        #100909;
+}
+
+.pagina-relojes .hero-relojes::after {
+    content: "JM";
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
+    color: rgba(212, 175, 55, .08);
+    font: 700 clamp(150px, 23vw, 290px)/.8 var(--serif);
+    pointer-events: none;
+}
+
+.pagina-relojes .hero-contenido {
+    width: min(100%, 650px);
+    position: relative;
+    z-index: 1;
+}
+
+.pagina-relojes .hero-etiqueta {
+    display: inline-block;
+    color: var(--dorado-vivo);
+    font-size: .76rem;
+    font-weight: 600;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+}
+
+.pagina-relojes .hero-relojes h1 {
+    margin: 9px 0 4px;
+    color: var(--dorado-vivo);
+    font: 600 clamp(3.8rem, 9vw, 6.5rem)/.95 var(--serif);
+    text-align: left;
+}
+
+.pagina-relojes .hero-relojes p {
+    margin: 12px 0 22px;
+    color: #E9D8AC;
+    font: 400 clamp(1rem, 2.4vw, 1.35rem)/1.4 var(--serif);
+}
+
+/* BUSCADOR */
+
+.pagina-relojes .buscador-relojes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(100%, 480px);
+    min-height: 48px;
+    padding: 5px 7px 5px 17px;
+    color: var(--dorado);
+    background: rgba(8, 6, 6, .86);
+    border: 1px solid var(--dorado);
+    border-radius: 999px;
+    transition: box-shadow .25s, border-color .25s;
+}
+
+.pagina-relojes .buscador-relojes:focus-within {
+    border-color: var(--dorado-vivo);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .12);
+}
+
+.pagina-relojes .buscador-relojes svg {
+    flex: 0 0 auto;
+}
+
+.pagina-relojes .buscador-relojes input {
+    width: 100%;
+    min-width: 0;
+    padding: 7px 0;
+    color: #F4E8CF;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font: 400 .88rem var(--sans);
+}
+
+.pagina-relojes .buscador-relojes input::placeholder {
+    color: #A99673;
+}
+
+/* SECCIONES */
+
+.pagina-relojes .seccion-marcas,
+.pagina-relojes .seccion-catalogo {
+    width: min(1180px, calc(100% - 40px));
+    margin-inline: auto;
+}
+
+.pagina-relojes .seccion-marcas {
+    padding-top: 24px;
+}
+
+.pagina-relojes .titulo-seccion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 3vw, 28px);
+    margin: 0 0 25px;
+    text-align: center;
+}
+
+.pagina-relojes .titulo-seccion > div {
+    min-width: max-content;
+}
+
+.pagina-relojes .titulo-seccion .linea {
+    flex: 1 1 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dorado));
+}
+
+.pagina-relojes .titulo-seccion .linea:last-child {
+    background: linear-gradient(90deg, var(--dorado), transparent);
+}
+
+.pagina-relojes .titulo-seccion h2 {
+    margin: 0;
+    color: var(--dorado-vivo);
+    font: 600 clamp(2rem, 5vw, 3rem)/1 var(--serif);
+}
+
+.pagina-relojes .titulo-seccion p {
+    margin: 5px 0 0;
+    color: #D7C6A4;
+    font: 400 1.05rem/1.3 var(--serif);
+}
+
+.pagina-relojes .adorno {
+    display: block;
+    margin-bottom: -3px;
+    color: var(--dorado-vivo);
+    font-size: 1.5rem;
+}
+
+/* MARCAS */
+
+.pagina-relojes .marcas-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.pagina-relojes .marca-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 116px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 13px 9px;
+    overflow: hidden;
+    color: #F1E5CB;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, .12), transparent 72%),
+        linear-gradient(145deg, #211513, #0B0808 78%);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .22s, border-color .22s, box-shadow .22s, background .22s;
+}
+
+.pagina-relojes .marca-card:hover,
+.pagina-relojes .marca-card.marca-activa {
+    transform: translateY(-3px);
+    border-color: var(--dorado-vivo);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .32), 0 0 14px rgba(212, 175, 55, .09);
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, .19), transparent 72%),
+        linear-gradient(145deg, #38231B, #120B09 78%);
+}
+
+.pagina-relojes .marca-decoracion {
+    color: var(--dorado-vivo);
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.pagina-relojes .marca-nombre {
+    position: relative;
+    z-index: 1;
+    color: #F1D58E;
+    font: 700 clamp(1rem, 1.8vw, 1.35rem)/1.1 var(--serif);
+    text-align: center;
+}
+
+.pagina-relojes .marca-ver {
+    position: relative;
+    z-index: 1;
+    padding: 3px 12px;
+    color: var(--dorado-vivo);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 999px;
+    font: 400 .72rem var(--sans);
+}
+
+.pagina-relojes .boton-todas-marcas {
+    display: block;
+    margin: 19px auto 34px;
+    padding: 10px 25px;
+    color: var(--dorado-vivo);
+    background: transparent;
+    border: 1px solid var(--dorado);
+    border-radius: 999px;
+    font: 500 .85rem var(--sans);
+    cursor: pointer;
+    transition: color .2s, background .2s, transform .2s;
+}
+
+.pagina-relojes .boton-todas-marcas:hover {
+    transform: translateY(-2px);
+    color: var(--negro);
+    background: var(--dorado);
+}
+
+/* CATÁLOGO */
+
+.pagina-relojes .seccion-catalogo {
+    padding-top: 4px;
+    padding-bottom: 65px;
+}
+
+.pagina-relojes .titulo-catalogo {
+    margin-bottom: 20px;
+}
+
+.pagina-relojes .resultado-catalogo {
+    margin: 0 5px 14px;
+    color: #B8A989;
+    font: 400 .8rem var(--sans);
+}
+
+.pagina-relojes .catalogo {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 17px;
+    padding: 0 5px 10px;
+}
+
+.pagina-relojes .reloj {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient(160deg, #1C1311, #090707);
+    border: 1px solid var(--dorado-oscuro);
+    border-radius: 8px;
+    clip-path: none;
+    cursor: pointer;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+
+.pagina-relojes .reloj::before,
+.pagina-relojes .reloj::after {
+    content: none;
+    display: none;
+}
+
+.pagina-relojes .reloj > * {
+    position: relative;
+    z-index: auto;
+}
+
+.pagina-relojes .reloj:hover {
+    transform: translateY(-4px);
+    border-color: var(--dorado-vivo);
+    box-shadow: 0 9px 22px rgba(0, 0, 0, .28);
+}
+
+.pagina-relojes .reloj:focus-visible {
+    outline: 2px solid var(--dorado-vivo);
+    outline-offset: 3px;
+}
+
+.pagina-relojes .reloj-foto {
+    position: relative;
+    width: 100%;
+    height: 205px;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(110, 31, 42, .24), transparent 72%), #100C0B;
+}
+
+.pagina-relojes .reloj-foto::after {
+    content: none;
+    display: none;
+}
+
+.pagina-relojes .reloj-foto img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    padding: 9px;
+    object-fit: contain;
+    transition: transform .35s ease;
+}
+
+.pagina-relojes .reloj:hover .reloj-foto img {
+    transform: scale(1.045);
+}
+
+.pagina-relojes .reloj-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 12px 12px 14px;
+    text-align: center;
+}
+
+.pagina-relojes .reloj-info h3 {
+    margin: 0;
+    color: #F1E6D2;
+    font: 600 1.12rem/1.2 var(--serif);
+}
+
+.pagina-relojes .reloj-info p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: #A99D8D;
+    font: 400 .76rem/1.4 var(--sans);
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.pagina-relojes .precio {
+    display: block;
+    margin: 5px 0 4px;
+    color: var(--dorado-vivo);
+    font: 600 1rem var(--sans);
+}
+
+/* BOTÓN WHATSAPP */
+
+.pagina-relojes .boton-whatsapp-reloj {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    min-height: 36px;
+    margin-top: auto;
+    padding: 8px 7px;
+    color: var(--dorado-vivo);
+    background: transparent;
+    border: 1px solid var(--dorado);
+    border-radius: 999px;
+    font: 500 .73rem var(--sans);
+    text-decoration: none;
+    transition: color .2s, background .2s;
+}
+
+.pagina-relojes .boton-whatsapp-reloj:hover {
+    color: var(--negro);
+    background: var(--dorado);
+}
+
+.pagina-relojes .reloj-foto .etiqueta {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 10px;
+    padding: 4px 10px;
+    color: #FFF1D6;
+    background: var(--vino);
+    border-radius: 999px;
+    font: 600 .72rem var(--sans);
+}
+
+.pagina-relojes .mensaje {
+    grid-column: 1 / -1;
+    padding: 28px 15px;
+    color: #D9C99E;
+    text-align: center;
+}
+
+/* AUDÍFONOS: opción visible pero desactivada */
+
+.pagina-relojes .menu .menu-inactivo {
+    opacity: .8;
+    cursor: default;
+}
+
+.pagina-relojes .menu .menu-inactivo:hover {
+    color: #E9D8AC;
+    border-color: transparent;
+}
+
+/* TABLETS */
+
+@media (max-width: 1000px) {
+    .pagina-relojes .marcas-grid,
+    .pagina-relojes .catalogo {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 650px) {
+    .pagina-relojes .hero-relojes {
+        min-height: 245px;
+        padding: 38px 6%;
+        background:
+            linear-gradient(90deg, rgba(8, 6, 6, .97), rgba(15, 8, 8, .72)),
+            radial-gradient(ellipse at 85% 45%, rgba(110, 31, 42, .55), transparent 55%),
+            #100909;
+    }
+
+    .pagina-relojes .hero-relojes::after {
+        right: -8%;
+        font-size: 145px;
+    }
+
+    .pagina-relojes .hero-relojes h1 {
+        font-size: clamp(3.6rem, 17vw, 5rem);
+    }
+
+    .pagina-relojes .hero-relojes p {
+        font-size: 1.05rem;
+    }
+
+    .pagina-relojes .seccion-marcas,
+    .pagina-relojes .seccion-catalogo {
+        width: min(100% - 28px, 1180px);
+    }
+
+    .pagina-relojes .titulo-seccion {
+        gap: 9px;
+        margin-bottom: 19px;
+    }
+
+    .pagina-relojes .titulo-seccion p {
+        font-size: .9rem;
+    }
+
+    .pagina-relojes .marcas-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .pagina-relojes .marca-card {
+        min-height: 100px;
+    }
+
+    .pagina-relojes .marca-nombre {
+        font-size: 1.12rem;
+    }
+
+    .pagina-relojes .catalogo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding-inline: 0;
+    }
+
+    .pagina-relojes .reloj-foto {
+        height: 155px;
+    }
+
+    .pagina-relojes .reloj-info {
+        padding: 10px 7px 11px;
+    }
+
+    .pagina-relojes .reloj-info h3 {
+        font-size: 1rem;
+    }
+
+    .pagina-relojes .boton-whatsapp-reloj {
+        min-height: 34px;
+        padding-inline: 4px;
+        font-size: .66rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .pagina-relojes .catalogo {
+        grid-template-columns: 1fr;
+    }
+
+    .pagina-relojes .reloj-foto {
+        height: 225px;
+    }
+}
+/* ======================================
+   GRUPO JM — AJUSTES DE TARJETAS
+====================================== */
+
+/* Nombres de relojes en dorado vivo */
+
+.reloj-info h3 {
+    color: #F0C44D !important;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.16);
+    margin-bottom: 7px;
+}
+
+/* Eliminar espacios del contador */
+
+.resultado-catalogo {
+    display: none !important;
+}
+
+/* Tarjetas más limpias */
+
+.reloj-info {
+    padding: 12px 11px 15px;
+    text-align: center;
+}
+
+/* ======================================
+   GRUPO JM — TARJETAS MÁS GRANDES
+====================================== */
+
+/* 4 relojes por fila */
+.catalogo {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+    padding: 0 8px;
+}
+
+/* Tarjetas */
+.reloj {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* Fotografías más grandes */
+.reloj-foto {
+    height: 260px;
+    background: #100c0b;
+}
+
+.reloj-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+}
+
+/* Información */
+.reloj-info {
+    padding: 16px 12px 19px;
+}
+
+.reloj-info h3 {
+    font-size: 23px;
+    color: #F0C44D !important;
+    margin-bottom: 9px;
+}
+
+.reloj-info p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Pantallas medianas: 3 por fila */
+@media (max-width: 1000px) {
+    .catalogo {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .reloj-foto {
+        height: 220px;
+    }
+}
+
+/* Celulares: 2 por fila */
+@media (max-width: 650px) {
+    .catalogo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 0;
+    }
+
+    .reloj-foto {
+        height: 175px;
+    }
+
+    .reloj-info h3 {
+        font-size: 18px;
+    }
+
+    .reloj-info {
+        padding: 12px 8px 14px;
+    }
+}

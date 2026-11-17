@@ -3,72 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relojes | Grupo JM</title>
-    <meta name="description" content="Catálogo de relojes de Grupo JM.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <!-- Ícono de la pestaña (logo de Grupo JM) -->
+    <title>Relojes | Grupo JM</title>
+
+    <meta name="description" content="Explora las marcas y el catálogo de relojes de Grupo JM.">
+    <meta name="theme-color" content="#0E0A0A">
+
+    <!-- ICONOS -->
     <link rel="icon" href="png/favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="png/favicon-32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="png/favicon-192.png">
     <link rel="apple-touch-icon" href="png/apple-touch-icon.png">
-    <meta name="theme-color" content="#0E0A0A">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Grupo JM">
-    <meta property="og:title" content="Grupo JM | Relojes con carácter">
-    <meta property="og:description" content="Relojes Rolex, Patek Philippe y Casio, con fotos, modelo y garantía.">
-    <meta property="og:image" content="https://gruporelojesjm.netlify.app/png/og-grupo-jm.jpg">
-    <meta property="og:url" content="https://gruporelojesjm.netlify.app/">
-    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- FUENTES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS PRINCIPAL -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body class="pagina-relojes">
+
+    <!-- =================================
+         ENCABEZADO
+    ================================== -->
 
     <header class="encabezado">
+
         <div class="barra">
-            <a href="index.html"><img src="png/logo-jm.png" alt="Grupo JM" class="logo"></a>
+
+            <a href="index.html" aria-label="Ir al inicio">
+                <img
+                    src="png/logo-jm.png"
+                    alt="Grupo JM"
+                    class="logo"
+                >
+            </a>
+
             <span class="divisor" aria-hidden="true"></span>
 
             <nav class="menu" aria-label="Principal">
-                    <a href="index.html">Inicio</a>
-                    <a href="index.html#nosotros">Nosotros</a>
-                    <a href="index.html#servicios">Servicios</a>
-                    <a href="relojes.html" aria-current="page">Productos</a>
-                    <a href="index.html#contacto">Contacto</a>
+
+                <a href="index.html">Inicio</a>
+
+                <a href="relojes.html" aria-current="page">
+                    Relojes
+                </a>
+
+                <a
+                    href="#"
+                    class="menu-inactivo"
+                    data-inactivo
+                    aria-disabled="true"
+                >
+                    Audífonos
+                </a>
+
+                <a href="index.html#nosotros">
+                    Nosotros
+                </a>
+
+                <a href="index.html#contacto">
+                    Contacto
+                </a>
+
             </nav>
 
             <div class="acciones">
-                <a class="icono" href="relojes.html" aria-label="Buscar relojes"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></a>
+
+                <a
+                    class="icono"
+                    href="#buscadorRelojes"
+                    aria-label="Ir al buscador"
+                >
+                    <svg viewBox="0 0 24 24"
+                         width="26"
+                         height="26"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.6"
+                         stroke-linecap="round"
+                         aria-hidden="true">
+
+                        <circle cx="10.5" cy="10.5" r="6.5"/>
+                        <path d="M15.5 15.5 21 21"/>
+
+                    </svg>
+                </a>
+
                 <span class="divisor" aria-hidden="true"></span>
-                <button class="icono" id="botonMenu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="panelMenu"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+
+                <button
+                    class="icono"
+                    id="botonMenu"
+                    type="button"
+                    aria-label="Abrir menú"
+                    aria-expanded="false"
+                    aria-controls="panelMenu"
+                >
+
+                    <svg viewBox="0 0 24 24"
+                         width="28"
+                         height="28"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.6"
+                         stroke-linecap="round"
+                         aria-hidden="true">
+
+                        <path d="M3 6h18M3 12h18M3 18h18"/>
+
+                    </svg>
+
+                </button>
+
             </div>
+
         </div>
-        <nav class="panel-menu" id="panelMenu" aria-label="Menú" hidden></nav>
+
+        <nav
+            class="panel-menu"
+            id="panelMenu"
+            aria-label="Menú"
+            hidden
+        ></nav>
+
     </header>
 
-    <main class="contenedor">
-        <section class="cabecera-pagina">
-            <h1>Relojes</h1>
-            <p>Filtra por marca y mira cada reloj.</p>
+
+    <!-- =================================
+         CONTENIDO PRINCIPAL
+    ================================== -->
+
+    <main>
+
+        <!-- PORTADA -->
+
+        <section class="hero-relojes">
+
+            <div class="hero-contenido">
+
+                <span class="hero-etiqueta">
+                    Tiempo con estilo
+                </span>
+
+                <h1>Relojes</h1>
+
+                <p>
+                    Encuentra el reloj perfecto para cada momento.
+                </p>
+
+                <!-- BUSCADOR -->
+
+                <label
+                    class="buscador-relojes"
+                    id="buscadorRelojes"
+                >
+
+                    <svg viewBox="0 0 24 24"
+                         width="22"
+                         height="22"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         aria-hidden="true">
+
+                        <circle cx="10.5" cy="10.5" r="6.5"/>
+                        <path d="M15.5 15.5 21 21"/>
+
+                    </svg>
+
+                    <input
+                        id="buscarReloj"
+                        type="search"
+                        placeholder="Buscar un reloj por nombre o descripción..."
+                        autocomplete="off"
+                    >
+
+                </label>
+
+            </div>
+
         </section>
 
-        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por marca"></div>
 
-        <section class="catalogo" id="catalogo" aria-live="polite"></section>
+        <!-- =================================
+             MARCAS
+        ================================== -->
+
+        <section
+            class="seccion-marcas"
+            aria-labelledby="tituloMarcas"
+        >
+
+            <div class="titulo-seccion">
+
+                <span class="linea"></span>
+
+                <div>
+
+                    <span class="adorno" aria-hidden="true">
+                        ♛
+                    </span>
+
+                    <h2 id="tituloMarcas">
+                        Marcas
+                    </h2>
+
+                    <p>
+                        Explora nuestras marcas más exclusivas
+                    </p>
+
+                </div>
+
+                <span class="linea"></span>
+
+            </div>
+
+            <!-- AQUÍ JAVASCRIPT CARGA LAS MARCAS -->
+
+            <div
+                class="marcas-grid"
+                id="marcasGrid"
+                aria-label="Seleccionar marca"
+            ></div>
+
+            <button
+                class="boton-todas-marcas"
+                id="verTodos"
+                type="button"
+            >
+                Ver todos los relojes
+                <span aria-hidden="true">→</span>
+            </button>
+
+        </section>
+
+
+        <!-- =================================
+             TODOS LOS RELOJES
+        ================================== -->
+
+        <section
+            class="seccion-catalogo"
+            aria-labelledby="tituloCatalogo"
+        >
+
+            <div class="titulo-seccion titulo-catalogo">
+
+                <span class="linea"></span>
+
+                <div>
+
+                    <span class="adorno" aria-hidden="true">
+                        ♙
+                    </span>
+
+                    <h2 id="tituloCatalogo">
+                        Todos los relojes
+                    </h2>
+
+                    <p>
+                        Descubre nuestra selección completa
+                    </p>
+
+                </div>
+
+                <span class="linea"></span>
+
+            </div>
+
+            <p
+                class="resultado-catalogo"
+                id="resultadoCatalogo"
+                aria-live="polite"
+            ></p>
+
+            <!-- AQUÍ APARECEN LOS PRODUCTOS -->
+
+            <div
+                class="catalogo"
+                id="catalogo"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
     </main>
 
+
+    <!-- =================================
+         PIE DE PÁGINA
+    ================================== -->
+
     <footer class="pie">
+
         <strong>Grupo JM</strong>
-        <span>© 2026 Grupo JM. Todos los derechos reservados.</span>
+
+        <span>
+            © 2026 Grupo JM. Todos los derechos reservados.
+        </span>
+
     </footer>
 
+
+    <!-- =================================
+         JAVASCRIPT
+    ================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="config.js"></script>
-<script src="script.js"></script>
-<script src="detalle.js"></script>
-<script src="buscar.js"></script>
-<script src="zoom-foto.js"></script>
+
+    <script src="config.js"></script>
+
+    <script src="script.js"></script>
+
+    <script src="detalle.js"></script>
+
+    <script src="zoom-foto.js"></script>
+
 </body>
 </html>
